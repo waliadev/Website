@@ -1,0 +1,154 @@
+.heroWrapper {
+  width: 100%;
+  height: 85vh;
+  position: relative;
+}
+
+.heroImage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.heroImg {
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.85),
+    rgba(0, 0, 0, 0.3)
+  );
+}
+
+.infoCard {
+  position: relative;
+  left: 2px;
+  top: 220px;
+  max-width: 650px;
+  padding: 40px;
+  border-radius: 24px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.infoCard h1 {
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.agency {
+  opacity: 0.85;
+  margin-bottom: 15px;
+}
+
+.ratingRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.ratingBadge {
+  background: #22c55e;
+  padding: 4px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.desc {
+  margin: 20px 0;
+  line-height: 1.6;
+  color: #e5e7eb;
+}
+
+/* ACTION ROW */
+
+.actionRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.callBtn,
+.whatsappBtn,
+.mapBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-radius: 40px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+.callBtn {
+  background: #22c55e;
+}
+
+.whatsappBtn {
+  background: #25d366;
+}
+
+.mapBtn {
+  background: #2563eb;
+}
+
+.callBtn:hover,
+.whatsappBtn:hover,
+.mapBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.iconBtns {
+  display: flex;
+  gap: 15px;
+  margin-left: 10px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .infoCard {
+    left: 0;
+    top: 120px;      /* Desktop 220px tha, mobile me kam kar diya */
+    max-width: 100%;
+    padding: 25px;
+    margin: 0 15px;  /* dono side se spacing */
+  }
+
+  .infoCard h1 {
+    font-size: 26px;
+  }
+
+  .actionRow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .callBtn,
+  .whatsappBtn,
+  .mapBtn {
+    width: 100%;
+    justify-content: center;
+  }
+}

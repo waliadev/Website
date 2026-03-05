@@ -1,0 +1,70 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 40px;
+  background: linear-gradient(135deg, #ffff, #ffff);
+  color: black;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.left {
+  flex: 1;
+  min-width: 280px;
+}
+
+.title {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.title span {
+  color: #22c55e;
+}
+
+.desc {
+  margin-top: 14px;
+  color: #cbd5e1;
+  max-width: 520px;
+}
+
+/* badges */
+.badges {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.badges span {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+}
+
+/* right */
+.right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.image {
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+/* mobile */
+@media (max-width: 768px) {
+  .hero {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .badges {
+    justify-content: center;
+  }
+}

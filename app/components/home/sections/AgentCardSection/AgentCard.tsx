@@ -1,0 +1,92 @@
+"use client";
+
+import styles from "@/app/components/home/styles/AgentCards.module.css";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
+import { useRouter } from "next/navigation";
+import { handleProtectedInteraction } from "@/utils/authGuard";
+import { getToken } from "@/utils/token";
+
+import AgentImageSlider from "@/app/components/home/sections/AgentCardSection/AgentImageSlider";
+import AgentContent from "@/app/components/home/sections/AgentCardSection/AgentContent";
+
+interface Agent {
+  agent_id: number;
+  name: string;
+  agency_name: string;
+  rating: string | null;
+  address: string;
+  whatsapp_number: string;
+  phone: string;
+  image_urls: string[];
+}
+
+export default function AgentCard({ agent }: { agent: Agent }) {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const token = getToken();
+
+  const { bookmarks } = useAppSelector((state) => state.bookmark);
+  const isSaved = bookmarks.includes(agent.agent_id);
+
+  const handleBookmark = () => {
+    dispatch(toggleBookmark(agent.agent_id));
+  };
+
+  const handleCall = () => {
+    handleProtectedInteraction(dispatch, router, agent.agent_id, "call", () => {
+      window.location.href = `tel:${agent.phone}`;
+    });
+  };
+
+  const handleWhatsApp = () => {
+    handleProtectedInteraction(
+      dispatch,
+      router,
+      agent.agent_id,
+      "whatsapp",
+      () => {
+        window.open(`https://wa.me/${agent.whatsapp_number}`, "_blank");
+      }
+    );
+  };
+
+const handleAgentDetails = (agentId: number): void => {
+  if (!agentId) {
+    console.warn("Invalid agent id");
+    return;
+  }
+
+  if (!token) {
+    router.replace("/sign-in");
+    return;
+  }
+
+  router.push(`/agent/${agentId}`);
+};
+
+  return (
+    <div
+      className={`${styles.card} ${
+        isSaved ? styles.bookmarkedCard : ""
+      }`}
+      onClick={()=>handleAgentDetails(agent.agent_id)}
+    >
+      <AgentImageSlider
+        images={agent.image_urls}
+        name={agent.name}
+        rating={agent.rating}
+        isSaved={isSaved}
+      />
+
+      <AgentContent
+        agent={agent}
+        token={token}
+        isSaved={isSaved}
+        handleBookmark={handleBookmark}
+        handleCall={handleCall}
+        handleWhatsApp={handleWhatsApp}
+      />
+    </div>
+  );
+}

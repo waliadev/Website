@@ -1,0 +1,835 @@
+/* ================= PAGE ================= */
+.page {
+  background: #f8fafc;
+}
+
+/* ================= HERO ================= */
+.hero {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+.heroImg {
+  object-fit: cover;
+}
+
+/* overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(2, 6, 23, 0.35),
+    rgba(2, 6, 23, 0.75)
+  );
+}
+
+/* hero content */
+.heroContent {
+  position: absolute;
+  bottom: 28px;
+  left: 40px;
+  color: white;
+  z-index: 2;
+}
+
+.heroContent h1 {
+  font-size: 32px;
+  font-weight: 800;
+}
+
+/* location row */
+.locationRow {
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #e5e7eb;
+}
+
+/* map icon */
+.mapIcon {
+  color: #22c55e;
+  flex-shrink: 0;
+}
+
+/* ================= CAROUSEL NAV ================= */
+.navBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.45);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: white;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+  transition: 0.2s ease;
+}
+
+.navBtn:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.leftBtn {
+  left: 16px;
+}
+
+.rightBtn {
+  right: 16px;
+}
+
+/* ================= MAIN WRAPPER ================= */
+.wrapper {
+  max-width: 1200px;
+  margin: auto;
+  padding: 40px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ================= AGENT CARD ================= */
+.agentCard {
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f7;
+}
+
+.agentTop {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.agentImg {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.agentInfo h2 {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+/* rating */
+.ratingRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.ratingBadge {
+  background: #dcfce7;
+  color: #166534;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.reviewText {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* icons right */
+.iconActions {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+  color: #374151;
+}
+
+/* ================= ACTION BUTTONS ================= */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  transition: 0.2s ease;
+}
+
+.primaryBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(34, 197, 94, 0.35);
+}
+
+.whatsappBtn {
+  background: #25d366;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.outlineBtn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ================= REVIEW CARD ================= */
+.reviewCard {
+  background: white;
+  border-radius: 18px;
+  padding: 22px;
+  border: 1px solid #eef2f7;
+}
+
+.writeBtn {
+  margin-top: 12px;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* form */
+.reviewForm {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewForm input,
+.reviewForm textarea {
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.submitBtn {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ================= SIDEBAR ================= */
+.right {
+  position: relative;
+}
+
+.stickyCard {
+  position: sticky;
+  top: 100px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stickyCard h4 {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* smooth image fade */
+.heroImg {
+  object-fit: cover;
+  transition: opacity 0.6s ease-in-out;
+}
+
+/* optional cinematic feel */
+.hero {
+  position: relative;
+  height: 320px;
+  overflow: hidden;
+}
+
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.verifiedIcon {
+  color: #22c55e;
+}
+
+.agencyName {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.metaInfo {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+.description {
+  margin-top: 14px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+
+/* ===== CARD ===== */
+.agentCard {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+
+.agentCard:hover {
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.12);
+}
+
+/* ===== TOP ===== */
+.agentTop {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+/* avatar */
+.avatarWrap {
+  position: relative;
+}
+
+.agentImg {
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.verifiedBadge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  color: #22c55e;
+  background: white;
+  border-radius: 50%;
+}
+
+/* info */
+.agentInfo {
+  flex: 1;
+}
+
+.agentName {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.agencyName {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+/* rating */
+.ratingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.ratingBadge {
+  background: #dcfce7;
+  color: #166534;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reviewText {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* meta */
+.metaRow {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* address */
+.addressRow {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* right icons */
+.iconActions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.iconBtn:hover {
+  background: #f8fafc;
+}
+
+/* ===== avatar section ===== */
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.avatarWrap {
+  position: relative;
+  width: 96px;
+  height: 96px;
+}
+
+.agentImg {
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+/* verified */
+.verifiedBadge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  color: #22c55e;
+  background: white;
+  border-radius: 50%;
+}
+
+/* ===== thumbs ===== */
+.thumbRow {
+  display: flex;
+  gap: 6px;
+}
+
+.thumb {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: 0.2s ease;
+}
+
+.thumb:hover {
+  transform: scale(1.05);
+}
+
+.thumbActive {
+  border-color: #22c55e;
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ===== rest polish ===== */
+.agentName {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.agencyName {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.metaRow {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.addressRow {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* description */
+.description {
+  margin-top: 16px;
+  color: #374151;
+  line-height: 1.6;
+}
+
+/* ===== CTA ===== */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+
+.primaryBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  padding: 11px 18px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.whatsappBtn {
+  background: #25d366;
+  border: none;
+  padding: 11px 18px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.outlineBtn {
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+
+/* ================= ULTRA CARD ================= */
+.ultraCard {
+  position: relative;
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 24px;
+  padding: 28px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  border: 1px solid #eef2f7;
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: all 0.35s ease;
+}
+
+.ultraCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.12);
+}
+
+/* ================= AVATAR ================= */
+.ultraAvatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.ultraAvatarImg {
+  object-fit: cover;
+  animation: ultraFade 0.6s ease;
+}
+
+@keyframes ultraFade {
+  from { opacity: 0.4; transform: scale(1.05); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.ultraVerified {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  color: #22c55e;
+  background: white;
+  border-radius: 50%;
+}
+
+/* ================= CONTENT ================= */
+.ultraName {
+  font-size: 28px;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.ultraAgency {
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* trust row */
+.ultraTrust {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.ultraRating {
+  background: #dcfce7;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ultraReviews {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.ultraDot {
+  color: #cbd5e1;
+}
+
+.ultraLocation {
+  color: #475569;
+}
+
+/* desc */
+.ultraDesc {
+  margin-top: 14px;
+  color: #334155;
+  line-height: 1.6;
+  max-width: 720px;
+}
+
+/* ================= ACTIONS ================= */
+.ultraActions {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.actionIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: white;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.actionIcon:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 18px 35px rgba(34, 197, 94, 0.45);
+}
+
+/* ================= RIGHT ================= */
+.ultraRight {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  color: #64748b;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 768px) {
+  .ultraCard {
+    grid-template-columns: 1fr;
+  }
+
+  .ultraAvatar {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 768px) {
+  .agentTop {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .iconActions {
+    align-self: flex-end;
+  }
+}
+
+/* ===== LARGE IMAGE ===== */
+.avatarWrapLarge {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.agentImgLarge {
+  object-fit: cover;
+}
+
+/* verified */
+.verifiedBadgeLarge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  color: #22c55e;
+  background: white;
+  border-radius: 50%;
+}
+
+/* ===== QUICK ICONS ===== */
+.quickActions {
+  display: flex;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.actionIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #22c55e;
+  color: white;
+  display: grid;
+  place-items: center;
+  transition: 0.25s ease;
+}
+
+.actionIcon:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(34,197,94,0.4);
+}
+
+.svgIcon {
+  width: 22px;
+  height: 22px;
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 992px) {
+
+  /* Wrapper already flex column hai */
+  .wrapper {
+    padding: 30px 16px 60px;
+    gap: 40px;
+  }
+
+  /* Hero section height adjust */
+  .heroImage {
+    height: 380px;
+  }
+
+  /* Glass info card responsive */
+  .infoCard {
+    left: 20px;
+    right: 20px;
+    bottom: 140px;
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .infoCard h1 {
+    font-size: 24px;
+  }
+
+  /* CTA bar stack vertically */
+  .ctaBar {
+    flex-direction: column;
+    width: 90%;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .ctaBar button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
