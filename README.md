@@ -1,36 +1,150 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BrokerDash Web
 
-## Getting Started
+BrokerDash Web is a modern real estate platform designed to help users discover trusted property dealers and connect with agents seamlessly.
+The platform allows users to explore property dealers, view detailed agent profiles, check ratings and reviews, and contact agents directly.
 
-First, run the development server:
+This project is built with modern web technologies focusing on performance, scalability, and a clean user experience.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Features
+
+* 🔐 Secure Authentication with OTP verification
+* 🏠 Discover trusted property dealers
+* ⭐ Agent profile with ratings and reviews
+* 📍 Location-based agent discovery
+* 🔎 Search and filter agents easily
+* ❤️ Bookmark favorite agents
+* 📱 Fully responsive modern UI
+* ⚡ Optimized performance using Next.js
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
+
+* Next.js
+* React
+* TypeScript
+* CSS / Modern UI Components
+
+**Backend**
+
+* Node.js
+* Express.js
+* MySQL
+
+**Authentication**
+
+* JWT Token
+* OTP Verification
+
+---
+
+## 📂 Project Structure
+
+```
+brokerdash-web
+│
+├── app
+│   ├── components
+│   ├── profile
+│   ├── agent
+│   └── bookmarks
+│
+├── public
+├── styles
+├── middleware.ts
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Clone the repository:
 
-## Learn More
+```
+git clone https://github.com/vik34as32/brokerdash-web.git
+```
 
-To learn more about Next.js, take a look at the following resources:
+Navigate into the project:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+cd brokerdash-web
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Install dependencies:
 
-## Deploy on Vercel
+```
+npm install
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Run the development server:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+npm run dev
+```
+
+Open in browser:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 🔐 Environment Variables
+
+Create a `.env` file in the root folder:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+JWT_SECRET=your_secret_key
+```
+
+---
+
+## 📸 Screenshots
+
+Add screenshots of your application here for better understanding.
+
+Example:
+
+* Home Page
+* Agent Listing
+* Agent Profile
+* Authentication Flow
+
+---
+
+## 📈 Future Improvements
+
+* Property listing system
+* Advanced filtering
+* Agent dashboard
+* Real-time notifications
+* Payment integration
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+If you'd like to improve the project, feel free to fork the repository and submit a pull request.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+
+
+Full Stack Developer
+Specializing in React, Next.js, Node.js, and scalable web applications.
