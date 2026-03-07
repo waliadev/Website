@@ -9,18 +9,18 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
  */
 const PUBLIC_ROUTES = [
   "/",
-  "/sign-in",
-  "/sign-up",
+  "/auth/sign-in",
+  "/auth/verify-otp",
 ];
 
 /**
  * Routes that must be protected
  */
 const PROTECTED_ROUTES = [
-  "/profile",
-  "/expert-help",
+  // "/profile",
+  // "/expert-help",
   "/agent",
-  "/bookmarks",
+  // "/bookmarks",
 ];
 
 /**
@@ -33,7 +33,7 @@ const isProtectedRoute = (pathname: string) =>
  * Remove invalid cookie and redirect
  */
 const redirectToLogin = (request: NextRequest) => {
-  const response = NextResponse.redirect(new URL("/sign-in", request.url));
+  const response = NextResponse.redirect(new URL("/auth/sign-in", request.url));
   response.cookies.delete("token");
   return response;
 };

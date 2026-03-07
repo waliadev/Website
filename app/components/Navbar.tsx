@@ -83,7 +83,7 @@ export default function Navbar(): React.ReactElement {
 
         {!isLoggedIn ? (
           <li className={styles.loginBtn}>
-            <Link href="/sign-in">Login</Link>
+            <Link href="/auth/sign-in">Login</Link>
           </li>
         ) : (
           <li className={styles.profileMenu} ref={menuRef}>
@@ -166,7 +166,7 @@ export default function Navbar(): React.ReactElement {
           <Link href="/contact-us">Contact Us</Link>
 
           {!isLoggedIn ? (
-            <Link href="/sign-in" className={styles.mobileLogin}>
+            <Link href="/auth/sign-in" className={styles.mobileLogin}>
               Login
             </Link>
           ) : (

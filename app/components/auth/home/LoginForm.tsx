@@ -31,6 +31,7 @@ export default function LoginForm() {
       });
 
       dispatch(loginUser({ phone: values.phone }));
+    
     },
   });
 
@@ -45,7 +46,15 @@ export default function LoginForm() {
             : ""
         }`}
       >
-        <span className="country">+91</span>
+        <div className="country">
+          <img
+            src="https://flagcdn.com/in.svg"
+            alt="India"
+            className="flag"
+          />
+          <span>+91</span>
+        </div>
+
         <input
           type="tel"
           name="phone"

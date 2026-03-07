@@ -294,6 +294,7 @@ import CitySection from "@/app/components/home/sections/herosection/CitySection"
 import AreaSection from "@/app/components/home/sections/herosection/AreaSection";
 import LocalitySection from "@/app/components/home/sections/herosection/LocalitySection";
 import HeroRight from "@/app/components/home/sections/herosection/HeroRight";
+import { HOME_HERO } from "@/constants/home";
 
 export default function Hero() {
   const dispatch = useDispatch<AppDispatch>();
@@ -358,12 +359,12 @@ export default function Hero() {
     <section className={styles.hero}>
       <div className={styles.heroLeft}>
         <h1 className={styles.heroTitle}>
-          Find the Best Properties <br />
-          & Brokers in Delhi NCR
+            {HOME_HERO.TITLE} <br />
+          {HOME_HERO.TITLE_SECOND}
         </h1>
 
         <p className={styles.heroDesc}>
-          Search verified brokers across Delhi, Noida, Gurugram & NCR.
+          {HOME_HERO.DESCRIPTION}
         </p>
 
         <SearchSection

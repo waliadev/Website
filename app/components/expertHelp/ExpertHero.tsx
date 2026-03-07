@@ -1,53 +1,46 @@
 "use client";
 
 import Image from "next/image";
-import styles from "./ExpertHero.module.css";
+import styles from "@/app/components/expertHelp/styles/ExpertHero.module.css";
 import { Phone, MessageCircle } from "lucide-react";
+import { EXPERT_HERO } from "@/constants/expertHelp";
 
 export default function ExpertHero() {
   return (
     <section className={styles.hero}>
       {/* LEFT */}
       <div className={styles.left}>
-        <div className={styles.badge}>24×7 Expert Support</div>
+        <div className={styles.badge}>{EXPERT_HERO.badge}</div>
 
         <h1 className={styles.title}>
-          Get <span>Expert Help</span> for Your
-          <br /> Property Journey
+          {EXPERT_HERO.title.first}{" "}
+          <span>{EXPERT_HERO.title.highlight}</span>
+          <br />
+          {EXPERT_HERO.title.second}
         </h1>
 
-        <p className={styles.desc}>
-          Connect with verified real estate professionals for
-          buying, selling, or renting properties. Fast guidance,
-          trusted experts, and personalized support — all in one place.
-        </p>
+        <p className={styles.desc}>{EXPERT_HERO.description}</p>
 
-        {/* TRUST STATS */}
+        {/* STATS */}
         <div className={styles.stats}>
-          <div>
-            <strong>10k+</strong>
-            <span>Happy Clients</span>
-          </div>
-          <div>
-            <strong>500+</strong>
-            <span>Verified Experts</span>
-          </div>
-          <div>
-            <strong>4.9★</strong>
-            <span>Average Rating</span>
-          </div>
+          {EXPERT_HERO.stats.map((stat, index) => (
+            <div key={index}>
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </div>
+          ))}
         </div>
 
-        {/* CTA BUTTONS */}
+        {/* BUTTONS */}
         <div className={styles.actions}>
           <button className={styles.primaryBtn}>
             <Phone size={18} />
-            Talk to Expert
+            {EXPERT_HERO.buttons.primary}
           </button>
 
           <button className={styles.secondaryBtn}>
             <MessageCircle size={18} />
-            Live Chat
+            {EXPERT_HERO.buttons.secondary}
           </button>
         </div>
       </div>
@@ -56,7 +49,7 @@ export default function ExpertHero() {
       <div className={styles.right}>
         <div className={styles.imageCard}>
           <Image
-            src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1200&auto=format&fit=crop"
+            src={EXPERT_HERO.image}
             alt="expert help"
             width={520}
             height={420}
@@ -65,7 +58,7 @@ export default function ExpertHero() {
           />
 
           <div className={styles.floatingBadge}>
-            ⭐ Trusted by thousands
+            {EXPERT_HERO.floatingBadge}
           </div>
         </div>
       </div>

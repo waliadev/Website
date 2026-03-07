@@ -1,3 +1,5 @@
+import { VERIFY_LEFT_SECTION } from "@/constants/auth";
+
 interface Props {
   phone: string;
 }
@@ -7,8 +9,10 @@ export default function VerifyLeft({ phone }: Props) {
     <div className="verify-left">
       <div className="verify-overlay">
         <div className="verify-left-content">
-          <h1>Secure OTP Verification</h1>
-          <p>We sent a verification code to +91{phone}</p>
+          <h1>{VERIFY_LEFT_SECTION.title}</h1>
+          <p>
+            {VERIFY_LEFT_SECTION.description} +91{phone}
+          </p>
         </div>
       </div>
     </div>

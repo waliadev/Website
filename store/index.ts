@@ -6,6 +6,7 @@ import bannerReducer  from "@/store/slices/features/banner/bannerSlice"
 import agentListingReducer from "@/store/slices/features/agents/agentListingSlice";
 import interactionReducer from "@/store/slices/features/interactions/interactionSlice"
 import bookmarkReducer from "@/store/slices/features/bookmark/bookmarkSlice"
+import profileReducer from "@/store/slices/features/profile/profileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     agentListing: agentListingReducer,
     interaction: interactionReducer,
     bookmark: bookmarkReducer,
+    profile: profileReducer,
   },
 });
 

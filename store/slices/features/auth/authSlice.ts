@@ -80,6 +80,27 @@ export const resendOtp = createAsyncThunk<
   }
 );
 
+
+/* ================= GOOGLE LOGIN ================= */
+
+export const loginWithGoogle = createAsyncThunk<
+  any,
+  { idToken: string },
+  { rejectValue: string }
+>(
+  "auth/loginWithGoogle",
+  async (payload, { rejectWithValue }) => {
+    try {
+      const res = await api.post("v1/auth/user/auth/google", payload);
+      return res.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Google login failed"
+      );
+    }
+  }
+);
+
 /* ================= SLICE ================= */
 
 const authSlice = createSlice({
@@ -151,6 +172,30 @@ const authSlice = createSlice({
       .addCase(resendOtp.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Resend OTP failed";
+      })
+      /* ===== GOOGLE LOGIN ===== */
+
+      .addCase(loginWithGoogle.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginWithGoogle.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isLoggedIn = true;
+
+        state.token = action.payload.tokens.access.token;
+        state.userName = action.payload.user.name;
+
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            "token",
+            action.payload.tokens.access.token
+          );
+        }
+      })
+      .addCase(loginWithGoogle.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Google login failed";
       });
   },
 });

@@ -1,0 +1,363 @@
+/* ================= CONTAINER ================= */
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 60px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.header h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.header p {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* ================= GRID ================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+/* ================= CARD ================= */
+
+.card {
+  background: #fff;
+  padding: 30px;
+  border-radius: 14px;
+  border: 1px solid #eee;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.08);
+}
+
+.iconWrap {
+  width: 50px;
+  height: 50px;
+  margin: auto;
+  border-radius: 12px;
+  background: #ff7a00;;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.helpIcon {
+  color: #ff7a00;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.card p {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+/* ================= BUTTON ================= */
+
+.actionBtn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #ff7a00;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.actionBtn:hover {
+  background: #e66e00;
+}
+
+/* ================= MODAL ================= */
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2000;
+}
+
+.modal {
+  width: 100%;
+  max-width: 600px;
+  background: white;
+  border-radius: 14px;
+  padding: 40px;
+  position: relative;
+  animation: modalFade 0.3s ease;
+}
+
+/* modal animation */
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= CLOSE BUTTON ================= */
+
+.closeBtn {
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  border: none;
+  background: #f3f4f6;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.closeBtn:hover {
+  background: #e5e7eb;
+}
+
+/* ================= FAQ ================= */
+
+.faq {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.faqItem {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.faqItem h4 {
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.faqItem p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Laptop */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .header h2 {
+    font-size: 28px;
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 768px) {
+
+  .container {
+    padding: 40px 16px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .card {
+    padding: 24px;
+  }
+
+  .header h2 {
+    font-size: 24px;
+  }
+
+  .header p {
+    font-size: 14px;
+  }
+
+  .modal {
+    padding: 30px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 20px;
+  }
+
+  .actionBtn {
+    width: 100%;
+  }
+
+  .modal {
+    padding: 24px;
+  }
+
+  .modal h2 {
+    font-size: 20px;
+  }
+
+  .faqItem {
+    padding: 14px;
+  }
+}
+
+
+
+/* ===== MODAL OVERLAY ===== */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+/* ===== MODAL BOX ===== */
+
+.modal {
+  width: 100%;
+  max-width: 650px;
+  max-height: 85vh;
+  background: #ffffff;
+  border-radius: 14px;
+  overflow-y: auto;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+/* ===== HEADER ===== */
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.modalHeader h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ===== CLOSE BUTTON ===== */
+
+.closeBtn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.closeBtn:hover {
+  background: #f3f4f6;
+}
+
+/* ===== SUBTEXT ===== */
+
+.modalSub {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 22px;
+}
+
+/* ===== FAQ LIST ===== */
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== FAQ ITEM ===== */
+
+.faqItem {
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  transition: 0.25s ease;
+}
+
+.faqItem:hover {
+  background: #f9fafb;
+}
+
+.faqItem h4 {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.faqItem p {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* ===== MOBILE ===== */
+
+@media (max-width: 600px) {
+
+  .modal {
+    padding: 22px;
+    border-radius: 10px;
+  }
+
+  .modalHeader h2 {
+    font-size: 18px;
+  }
+
+  .faqItem {
+    padding: 14px;
+  }
+}

@@ -11,6 +11,7 @@ import AuthLayout from "@/app/components/auth/home/AuthLayout";
 import AuthLeftSection from "@/app/components/auth/sections/AuthLeftSection";
 import LoginForm from "@/app/components/auth/home/LoginForm";
 import SocialLoginSection from "@/app/components/auth/sections//SocialLoginSection";
+import {API_ENDPOINTS} from "@/constants/api"
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function LoginPage() {
   );
 
   useEffect(() => {
-    if (otpSent) router.push("/verify-otp");
+    if (otpSent) router.push(API_ENDPOINTS.AUTH.VERIFY_OTP);
   }, [otpSent, router]);
 
   useEffect(() => {

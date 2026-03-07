@@ -1,16 +1,11 @@
+import { AUTH_LEFT_SECTION } from "@/constants/auth";
+
 export default function AuthLeftSection() {
   return (
-    <div className="overlay">
-      <div className="leftContent">
-        <h1>
-          Connect with Trusted Property Dealers
-          <br />
-          Near You
-        </h1>
-        <p>
-          Discover verified brokers and find your perfect property
-          faster.
-        </p>
+    <div className="authLeftSection">
+      <div className="authLeftContent">
+        <h1>{AUTH_LEFT_SECTION.title}</h1>
+        <p>{AUTH_LEFT_SECTION.description}</p>
       </div>
     </div>
   );

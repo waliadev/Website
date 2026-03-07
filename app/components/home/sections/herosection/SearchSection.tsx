@@ -46,7 +46,7 @@ export default function SearchSection({
         <input
           value={query}
           onChange={handleSearchChange}
-          placeholder="Search for area, locality, or street name"
+          placeholder="Search for area, locality, or city name"
           className={styles.premiumInput}
         />
 

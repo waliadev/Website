@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import Navbar from "@/app/components/shared/components/Navbar";
 import VerifyLeft from "@/app/components/verify/components/VerifyLeft";
 import VerifyRight from "@/app/components/verify/components/VerifyRight";
+import { API_ENDPOINTS } from "@/constants/api";
 
 /**
  * Constants
@@ -29,7 +30,7 @@ export default function VerifyPage() {
 
       // If phone not found → redirect to login
       if (!storedPhone) {
-        router.replace("/sign-in");
+        router.replace(API_ENDPOINTS.AUTH.LOGIN);
         return;
       }
 
