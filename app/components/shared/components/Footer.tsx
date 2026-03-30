@@ -31,16 +31,18 @@ export default function Footer() {
         <div>
           <h4>Company</h4>
           <ul>
-            <li><Link href={ROUTES.ABOUT}>About Us</Link></li>
-            <li><Link href={ROUTES.CONTACT}>Contact Us</Link></li>
+            <li>About Us</li>
+            <li>Contact Us</li>
           </ul>
         </div>
 
         <div>
           <h4>Legal</h4>
           <ul>
-            <li><Link href={ROUTES.PRIVACY}>Privacy Policy</Link></li>
-            <li><Link href={ROUTES.TERMS}>Terms & Conditions</Link></li>
+            <li>
+              Privacy Policy
+              </li>
+            <li>Terms & Conditions</li>
           </ul>
         </div>
 

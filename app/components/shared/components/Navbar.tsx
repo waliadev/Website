@@ -40,7 +40,7 @@ export default function Navbar() {
             priority
           />
           <h2 className="brand">
-            Broker<span>dash</span>
+            Broker<span>Dash</span>
           </h2>
         </div>
 
@@ -82,7 +82,6 @@ export default function Navbar() {
 
                     <button
                       className="menuItem"
-                      onClick={() => navigate(ROUTES.BOOKMARKS)}
                     >
                       <Bookmark size={18} />
                       Bookmarks
@@ -90,7 +89,6 @@ export default function Navbar() {
 
                     <button
                       className="menuItem"
-                      onClick={() => navigate(ROUTES.EXPERT_HELP)}
                     >
                       <LifeBuoy size={18} />
                       Expert Help

@@ -43,7 +43,10 @@ export const fetchCities = createAsyncThunk<
   { rejectValue: string }
 >("location/fetchCities", async (_, { rejectWithValue }) => {
   try {
-    const res = await api.get("auth/cities");
+      const res = await api.get("auth/cities", {
+      params: { t: Date.now() },
+    });
+
     return extractArray<City>(res.data);
   } catch (error: any) {
     return rejectWithValue(

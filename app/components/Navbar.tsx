@@ -60,7 +60,7 @@ export default function Navbar(): React.ReactElement {
       {/* LOGO */}
       <div className={styles.logo}>
         <span className={styles.logoBroker}>Broker</span>
-        <span className={styles.logoDash}>dash</span>
+        <span className={styles.logoDash}>Dash</span>
       </div>
 
       {/* DESKTOP NAV */}

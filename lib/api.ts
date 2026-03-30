@@ -12,11 +12,15 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    config.headers["Cache-Control"] = "no-store";
+  config.headers["Pragma"] = "no-cache";
     const token = getToken();
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+   
 
     if (config.data instanceof FormData) {
       config.headers["Content-Type"] = "multipart/form-data";

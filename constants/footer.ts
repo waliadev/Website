@@ -1,7 +1,7 @@
 export const FOOTER = {
   BRAND: {
     NAME1: "Broker",
-    NAME2: "dash",
+    NAME2: "Dash",
     TAGLINE:
       "Find trusted property dealers and dream homes across India.",
   },

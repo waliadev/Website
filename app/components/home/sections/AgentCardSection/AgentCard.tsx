@@ -9,6 +9,7 @@ import { getToken } from "@/utils/token";
 
 import AgentImageSlider from "@/app/components/home/sections/AgentCardSection/AgentImageSlider";
 import AgentContent from "@/app/components/home/sections/AgentCardSection/AgentContent";
+import { createSlug } from "@/utils/createSlug";
 
 interface Agent {
   agent_id: number;
@@ -51,7 +52,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
     );
   };
 
-const handleAgentDetails = (agentId: number): void => {
+const handleAgentDetails = (agentId: number,agentName: string): void => {
   if (!agentId) {
     console.warn("Invalid agent id");
     return;
@@ -61,7 +62,7 @@ const handleAgentDetails = (agentId: number): void => {
     router.replace("/sign-in");
     return;
   }
-
+  const slug = createSlug(agentName);
   router.push(`/agent/${agentId}`);
 };
 
@@ -70,7 +71,7 @@ const handleAgentDetails = (agentId: number): void => {
       className={`${styles.card} ${
         isSaved ? styles.bookmarkedCard : ""
       }`}
-      onClick={()=>handleAgentDetails(agent.agent_id)}
+      onClick={()=>handleAgentDetails(agent.agent_id, agent.name)}
     >
       <AgentImageSlider
         images={agent.image_urls}

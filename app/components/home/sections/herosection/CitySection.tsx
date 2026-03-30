@@ -11,7 +11,7 @@ const iconMap: Record<string, React.ElementType> = {
   Delhi: DelhiIcon,
   Ghaziabad: GhaziabadIcon,
   "Greater Noida": GreaterNoidaIcon,
-  Gurugram: GurugramIcon,
+  Gurgaon: GurugramIcon,
   Noida: NoidaIcon,
 };
 
@@ -31,9 +31,8 @@ export default function CitySection({
           return (
             <div
               key={city.id}
-              className={`${styles.cityCard} ${
-                selectedCityId === city.id ? styles.activeCity : ""
-              }`}
+              className={`${styles.cityCard} ${selectedCityId === city.id ? styles.activeCity : ""
+                }`}
               onClick={() => handleCityClick(city)}
             >
               <div className={styles.cityIconWrap}>

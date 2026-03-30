@@ -72,3 +72,90 @@
   place-items: center;
   text-align: center;
 }
+
+
+.section{
+padding:80px 20px;
+background:#fafafa;
+}
+
+.sectionHeader{
+text-align:center;
+margin-bottom:50px;
+}
+
+.sectionHeader h2{
+font-size:34px;
+font-weight:700;
+}
+
+.sectionHeader p{
+color:#777;
+margin-top:8px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+}
+
+.card{
+background:white;
+border-radius:14px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+transition:all .3s;
+}
+
+.imageWrap{
+position:relative;
+height:180px;
+}
+
+.image{
+object-fit:cover;
+}
+
+.bookmark{
+position:absolute;
+top:12px;
+right:12px;
+background:white;
+border:none;
+padding:8px 10px;
+border-radius:50%;
+cursor:pointer;
+}
+
+.content{
+padding:18px;
+}
+
+.agency{
+font-size:14px;
+color:#777;
+margin-top:3px;
+}
+
+.address{
+font-size:13px;
+color:#999;
+margin-top:5px;
+}
+
+.footer{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:12px;
+}
+
+.viewBtn{
+background:#22c55e;
+color:white;
+border:none;
+padding:7px 15px;
+border-radius:6px;
+cursor:pointer;
+}
