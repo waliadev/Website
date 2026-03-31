@@ -74,7 +74,6 @@ export default function Navbar() {
 
                     <button
                       className="menuItem"
-                      onClick={() => navigate(ROUTES.PROFILE)}
                     >
                       <User size={18} />
                       My Profile

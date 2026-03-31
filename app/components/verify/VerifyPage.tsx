@@ -12,7 +12,7 @@ import { API_ENDPOINTS } from "@/constants/api";
 /**
  * Constants
  */
-const OTP_EXPIRY_DURATION = 3 * 60 * 1000; // 3 minutes
+const OTP_EXPIRY_DURATION = 5 * 60 * 1000; // 3 minutes
 
 export default function VerifyPage() {
   const router = useRouter();

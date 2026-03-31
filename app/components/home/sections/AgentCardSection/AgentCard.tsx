@@ -59,11 +59,11 @@ const handleAgentDetails = (agentId: number,agentName: string): void => {
   }
 
   if (!token) {
-    router.replace("/sign-in");
+    router.replace("/auth/sign-in");
     return;
   }
-  const slug = createSlug(agentName);
-  router.push(`/agent/${agentId}`);
+  // const slug = createSlug(agentName);
+  // router.push(`/agent/${agentId}`);
 };
 
   return (

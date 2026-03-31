@@ -11,9 +11,10 @@ export default function AgentImageSlider({
 }: any) {
   const [index, setIndex] = useState(0);
 
+  console.log("AgentImageSlider",images)
   const imageList =
     images?.length > 0
-      ? images.map((img: string) => `${PUBLIC_BASE_URL}/${img}`)
+      ? images.map((img: string) => `${img}`)
       : ["https://via.placeholder.com/400x300"];
 
   useEffect(() => {
