@@ -45,13 +45,12 @@ export default function AboutPage() {
     <>
       <Navbar />
 
-      <AboutHero />
+      {/* <AboutHero /> */}
 
       {loading ? (
         <AboutLoader />
       ) : (
         <AboutContent
-          title={aboutData?.title}
           content={extractText(aboutData?.content || "")}
         />
       )}

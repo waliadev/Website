@@ -24,7 +24,6 @@ const initialState: LocationState = {
 
 /* ================= HELPER ================= */
 
-// 🔥 Handles formattedData / data / direct array
 const extractArray = <T>(response: any): T[] => {
   if (!response) return [];
 
@@ -43,7 +42,7 @@ export const fetchCities = createAsyncThunk<
   { rejectValue: string }
 >("location/fetchCities", async (_, { rejectWithValue }) => {
   try {
-      const res = await api.get("auth/cities", {
+    const res = await api.get("auth/cities", {
       params: { t: Date.now() },
     });
 
@@ -63,9 +62,7 @@ export const fetchAreas = createAsyncThunk<
   { rejectValue: string }
 >("location/fetchAreas", async (payload, { rejectWithValue }) => {
   try {
-    const res = await api.get(
-      `auth/areas?cityId=${payload.id}`
-    );
+    const res = await api.get(`auth/areas?cityId=${payload.id}`);
     return extractArray<Area>(res.data);
   } catch (error: any) {
     return rejectWithValue(
@@ -126,18 +123,31 @@ export const searchLocalities = createAsyncThunk<
 const locationSlice = createSlice({
   name: "location",
   initialState,
+
   reducers: {
     clearLocationError: (state) => {
       state.error = null;
     },
+
+    /* 🔥 RESET AREAS + LOCALITIES */
     resetAreas: (state) => {
       state.areas = [];
       state.localities = [];
     },
+
+    /* 🔥 RESET ONLY LOCALITIES */
     resetLocalities: (state) => {
       state.localities = [];
     },
+
+    /* 🔥 MAIN FIX (IMPORTANT) */
+    resetAllLocationData: (state) => {
+      state.areas = [];
+      state.localities = [];
+      state.searchedLocalities = [];
+    },
   },
+
   extraReducers: (builder) => {
     builder
 
@@ -199,10 +209,13 @@ const locationSlice = createSlice({
   },
 });
 
+/* ================= EXPORT ================= */
+
 export const {
   clearLocationError,
   resetAreas,
   resetLocalities,
+  resetAllLocationData, // 🔥 IMPORTANT
 } = locationSlice.actions;
 
 export default locationSlice.reducer;

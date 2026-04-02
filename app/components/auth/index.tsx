@@ -12,6 +12,7 @@ import AuthLeftSection from "@/app/components/auth/sections/AuthLeftSection";
 import LoginForm from "@/app/components/auth/home/LoginForm";
 import SocialLoginSection from "@/app/components/auth/sections//SocialLoginSection";
 import {API_ENDPOINTS} from "@/constants/api"
+import Footer from "../shared/components/Footer";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -43,6 +44,7 @@ export default function LoginPage() {
           </div>
         }
       />
+      <Footer/>
     </>
   );
 }

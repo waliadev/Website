@@ -10,7 +10,7 @@ export default function AboutContent({ title, content }: Props) {
     <section className={styles.wrapper}>
 
       <h2 className={styles.title}>
-        {title || "About Us"}
+        {title}
       </h2>
 
       <div className={styles.container}>

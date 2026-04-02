@@ -38,9 +38,9 @@ export default function PrivacyPage() {
     <>
       <Navbar />
 
-      <PrivacyHero
+      {/* <PrivacyHero
         title={privacyData?.title}
-      />
+      /> */}
 
       {loading ? (
         <PrivacyLoader />

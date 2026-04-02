@@ -35,10 +35,10 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-
+{/* 
       <ContactHero
         title={contactData?.title}
-      />
+      /> */}
 
       {loading ? (
         <ContactLoader />

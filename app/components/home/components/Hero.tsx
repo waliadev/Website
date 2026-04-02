@@ -1,7 +1,3 @@
-
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,6 +9,7 @@ import {
   fetchAreas,
   fetchLocalities,
   searchLocalities,
+  resetAllLocationData,
 } from "@/store/slices/features/location/locationSlice";
 
 import { fetchAgentsByLocation } from "@/store/slices/features/agents/agentListingSlice";
@@ -40,7 +37,9 @@ export default function Hero() {
 
   /* ================= INITIAL FETCH ================= */
   useEffect(() => {
+    dispatch(resetAllLocationData());
     dispatch(fetchCities());
+    
   }, [dispatch]);
 
   /* ================= FETCH BANNERS ================= */
@@ -64,9 +63,13 @@ export default function Hero() {
     setSelectedAreaId(null);
     setSelectedLocalityId(null);
 
-    if (city.name === "Delhi") {
+    if (city.has_area === 1) {
+      // ✅ fetch areas
+      dispatch(resetAllLocationData());
       dispatch(fetchAreas({ id: city.id }));
     } else {
+      // ✅ direct locality
+      dispatch(resetAllLocationData());
       dispatch(fetchLocalities({ cityId: city.id }));
     }
   };
@@ -86,11 +89,15 @@ export default function Hero() {
     );
   };
 
+  /* ================= CHECK HAS AREA ================= */
+  const selectedCity = cities.find((c) => c.id === selectedCityId);
+  const hasArea = selectedCity?.has_area === 1;
+
   return (
     <section className={styles.hero}>
       <div className={styles.heroLeft}>
         <h1 className={styles.heroTitle}>
-            {HOME_HERO.TITLE} <br />
+          {HOME_HERO.TITLE} <br />
           {HOME_HERO.TITLE_SECOND}
         </h1>
 
@@ -98,6 +105,7 @@ export default function Hero() {
           {HOME_HERO.DESCRIPTION}
         </p>
 
+        {/* 🔍 SEARCH */}
         <SearchSection
           searchedLocalities={searchedLocalities}
           searchLocalities={searchLocalities}
@@ -108,26 +116,34 @@ export default function Hero() {
           setSelectedLocalityId={setSelectedLocalityId}
         />
 
+        {/* 🏙 CITY */}
         <CitySection
           cities={cities}
           selectedCityId={selectedCityId}
           handleCityClick={handleCityClick}
         />
 
-        <AreaSection
-          areas={areas}
-          selectedAreaId={selectedAreaId}
-          selectedCityName={selectedCityName}
-          handleAreaClick={handleAreaClick}
-        />
+        {/* 🏢 AREA (ONLY IF has_area = 1) */}
+        {selectedCityId && hasArea && (
+          <AreaSection
+            areas={areas}
+            selectedAreaId={selectedAreaId}
+            selectedCityName={selectedCityName}
+            handleAreaClick={handleAreaClick}
+          />
+        )}
 
-        <LocalitySection
-          localities={localities}
-          selectedLocalityId={selectedLocalityId}
-          setSelectedLocalityId={setSelectedLocalityId}
-        />
+        {/* 📍 LOCALITY */}
+        {selectedCityId && (
+          <LocalitySection
+            localities={localities}
+            selectedLocalityId={selectedLocalityId}
+            setSelectedLocalityId={setSelectedLocalityId}
+          />
+        )}
       </div>
 
+      {/* RIGHT SIDE */}
       <HeroRight />
     </section>
   );

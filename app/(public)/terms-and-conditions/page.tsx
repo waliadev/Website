@@ -36,7 +36,7 @@ export default function TermsPage() {
     <>
       <Navbar />
 
-      <TermsHero title={termsData?.title} />
+      {/* <TermsHero title={termsData?.title} /> */}
 
       {loading ? (
         <TermsLoader />
