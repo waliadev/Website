@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
  */
 export const getToken = (): string => {
   const token = Cookies.get("token");
+   console.log(token,"token in getToken")
 
   return token ? token : "";
 };

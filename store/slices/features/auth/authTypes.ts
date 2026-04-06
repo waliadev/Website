@@ -3,7 +3,7 @@
 export interface AuthState {
   isLoggedIn: boolean;
   userName: string | null;
-  token: string | null;
+  tokens: string | null;
   loading: boolean;
   error: string | null;
   otpSent: boolean;
@@ -21,7 +21,7 @@ export interface VerifyOtpPayload {
 /* ✅ Optional: API Response Types (Recommended) */
 
 export interface VerifyOtpResponse {
-  token: string;
+  tokens: string;
   data: {
     name: string;
   };

@@ -11,15 +11,17 @@ const PUBLIC_ROUTES = [
   "/",
   "/auth/sign-in",
   "/auth/verify-otp",
+  "/profile"
 ];
 
 /**
  * Routes that must be protected
  */
 const PROTECTED_ROUTES = [
-  // "/profile",
-  // "/expert-help",
+   "/profile",
+   "/expert-help",
   "/agent",
+  "/agent/:path*"
   // "/bookmarks",
 ];
 

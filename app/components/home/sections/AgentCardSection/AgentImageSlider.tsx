@@ -11,7 +11,6 @@ export default function AgentImageSlider({
 }: any) {
   const [index, setIndex] = useState(0);
 
-  console.log("AgentImageSlider",images)
   const imageList =
     images?.length > 0
       ? images.map((img: string) => `${img}`)

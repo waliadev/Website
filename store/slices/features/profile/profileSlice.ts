@@ -21,7 +21,7 @@ export const getProfile = createAsyncThunk<
   "profile/getProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await api.get("v1/auth/users/profile");
+      const res = await api.get("/auth/users/profile");
       return res.data.data;
     } catch (error: any) {
       return rejectWithValue(

@@ -8,10 +8,22 @@ import { verifyOtp } from "@/store/slices/features/auth/authSlice";
 import type { AppDispatch, RootState } from "@/store";
 import OtpInput from "@/app/components/verify/components/OtpInput";
 
+/* ================= TYPES ================= */
+
 interface VerifyRightProps {
   phone: string;
   expiryTime?: number | null;
 }
+
+type User = {
+  id: number;
+  name: string;
+  phone: string;
+};
+
+
+
+/* ================= COMPONENT ================= */
 
 export default function VerifyRight({
   phone,
@@ -20,7 +32,10 @@ export default function VerifyRight({
 
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
-  const { loading, error } = useSelector((state: RootState) => state.auth);
+
+  const { loading, error } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   const [otp, setOtp] = useState("");
   const [timeLeft, setTimeLeft] = useState(180);
@@ -45,11 +60,9 @@ export default function VerifyRight({
     };
 
     tick();
-
     const interval = setInterval(tick, 1000);
 
     return () => clearInterval(interval);
-
   }, [expiryTime]);
 
   /* ================= TIME FORMAT ================= */
@@ -57,7 +70,6 @@ export default function VerifyRight({
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 
@@ -79,23 +91,32 @@ export default function VerifyRight({
         verifyOtp({ phone, otp })
       ).unwrap();
 
-      Cookies.set("token", result.token, {
-        expires: 7,
-        path: "/",
-      });
+      console.log(result, "Verify result");
 
-      Cookies.set("user", JSON.stringify(result.data), {
-        expires: 7,
-        path: "/",
-      });
+      /* ✅ Save Token */
+      if (result?.tokens) {
+        Cookies.set("token", result.tokens, {
+          expires: 7,
+          path: "/",
+          sameSite: "Lax",
+        });
+      }
 
-      Cookies.remove("verify_phone", { path: "/" });
-      Cookies.remove("otp_expiry", { path: "/" });
+      /* ✅ Save User */
+      if (result?.data) {
+        Cookies.set("user", JSON.stringify(result.data), {
+          expires: 7,
+          path: "/",
+          sameSite: "Lax",
+        });
+      }
 
-      router.replace("/");
+      /* ✅ Redirect after success */
+      router.push("/"); // change route if needed
 
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.log("OTP Verify Failed ❌", error);
+      alert("OTP verification failed");
     }
   };
 
@@ -103,7 +124,6 @@ export default function VerifyRight({
 
   return (
     <div className="verify-right">
-
       <div className="verify-card">
 
         <h2 className="verify-title">Verify OTP</h2>
@@ -140,7 +160,6 @@ export default function VerifyRight({
         </p>
 
       </div>
-
     </div>
   );
 }

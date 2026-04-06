@@ -10,6 +10,7 @@ import { getToken } from "@/utils/token";
 import AgentImageSlider from "@/app/components/home/sections/AgentCardSection/AgentImageSlider";
 import AgentContent from "@/app/components/home/sections/AgentCardSection/AgentContent";
 import { createSlug } from "@/utils/createSlug";
+import { useEffect, useState } from "react";
 
 interface Agent {
   agent_id: number;
@@ -25,7 +26,18 @@ interface Agent {
 export default function AgentCard({ agent }: { agent: Agent }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const token = getToken();
+
+  const [token, setToken] = useState<string | null>(null);
+
+
+
+  useEffect(() => {
+    const t = getToken();
+    setToken(t);
+  }, []);
+
+
+  console.log("tken in card", token)
 
   const { bookmarks } = useAppSelector((state) => state.bookmark);
   const isSaved = bookmarks.includes(agent.agent_id);
@@ -51,27 +63,24 @@ export default function AgentCard({ agent }: { agent: Agent }) {
       }
     );
   };
+const handleAgentDetails = (agentId: number, agentName: string): void => {
+  if (!agentId) return;
 
-const handleAgentDetails = (agentId: number,agentName: string): void => {
-  if (!agentId) {
-    console.warn("Invalid agent id");
+  const freshToken = getToken(); // 🔥 direct cookie se
+
+  if (!freshToken) {
+    router.push("/auth/sign-in");
     return;
   }
-
-  if (!token) {
-    router.replace("/auth/sign-in");
-    return;
-  }
-  // const slug = createSlug(agentName);
-  // router.push(`/agent/${agentId}`);
+  const slug = createSlug(agentName);
+  router.push(`/agent/${slug}-${agentId}`);
 };
 
   return (
     <div
-      className={`${styles.card} ${
-        isSaved ? styles.bookmarkedCard : ""
-      }`}
-      onClick={()=>handleAgentDetails(agent.agent_id, agent.name)}
+      className={`${styles.card} ${isSaved ? styles.bookmarkedCard : ""
+        }`}
+      onClick={() => handleAgentDetails(agent.agent_id, agent.agency_name)}
     >
       <AgentImageSlider
         images={agent.image_urls}

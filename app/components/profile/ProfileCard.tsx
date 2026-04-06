@@ -6,6 +6,8 @@ import { useState, useEffect } from "react";
 import ProfileAvatar from "./ProfileAvatar";
 import ProfileInfoForm from "./ProfileInfoForm";
 import ProfileMap from "./ProfileMap";
+import { getProfile,updateProfile } from "@/store/slices/features/profile/profileSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks"; 
 
 export default function ProfileCard() {
 
