@@ -15,6 +15,17 @@ interface VerifyRightProps {
   expiryTime?: number | null;
 }
 
+interface VerifyOtpResponse {
+  success: boolean;
+  message: string;
+  data: any;
+  tokens: string; // ✅ correct name
+  expires_in: string;
+}
+
+
+
+
 export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
@@ -79,11 +90,10 @@ export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
 
       // ✅ SUCCESS
       showToast("OTP verified successfully ✅", "success");
+      console.log("Verification result:", result)
 
-      showToast("OTP verified successfully ✅", "success");
-
-      if (result?.token) {
-        Cookies.set("token", result.token, { expires: 7 });
+      if ((result as any)?.tokens) {
+        Cookies.set("token", (result as any).tokens, { expires: 7 });
       }
 
       if (result?.data) {
