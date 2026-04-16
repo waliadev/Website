@@ -1,13 +1,20 @@
 // src/store/auth/auth.types.ts
 
+/* ================= AUTH STATE ================= */
+
 export interface AuthState {
   isLoggedIn: boolean;
   userName: string | null;
-  tokens: string | null;
+
+  // ✅ FIX: use singular (consistent everywhere)
+  token: string | null;
+
   loading: boolean;
   error: string | null;
   otpSent: boolean;
 }
+
+/* ================= PAYLOADS ================= */
 
 export interface LoginPayload {
   phone: string;
@@ -18,10 +25,12 @@ export interface VerifyOtpPayload {
   otp: string;
 }
 
-/* ✅ Optional: API Response Types (Recommended) */
+/* ================= API RESPONSE TYPES ================= */
 
 export interface VerifyOtpResponse {
-  tokens: string;
+  // ✅ FIX: match state naming
+  token: string;
+
   data: {
     name: string;
   };

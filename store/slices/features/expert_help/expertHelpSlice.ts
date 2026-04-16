@@ -2,13 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/api";
 import { getToken } from "@/utils/token";
 
-interface ExpertHelpPayload {
+/* ================= TYPES ================= */
+
+export interface ExpertHelpPayload {
   purpose: string;
   propertyType: string;
   propertySize: string;
-  city: string;
-  area: string;
-  locality: string;
+
+  // ✅ FIX: number type (IDs हैं)
+  city: number | null;
+  area: number | null;
+  locality: number | null;
+
   requirement: string;
 }
 
@@ -47,7 +52,7 @@ export const addExpertHelp = createAsyncThunk<
     return response.data;
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "Expert Help failed"
+      error?.response?.data?.message || "Expert Help failed"
     );
   }
 });

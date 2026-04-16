@@ -80,8 +80,10 @@ export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
       // ✅ SUCCESS
       showToast("OTP verified successfully ✅", "success");
 
-      if (result?.tokens) {
-        Cookies.set("token", result.tokens, { expires: 7 });
+      showToast("OTP verified successfully ✅", "success");
+
+      if (result?.token) {
+        Cookies.set("token", result.token, { expires: 7 });
       }
 
       if (result?.data) {

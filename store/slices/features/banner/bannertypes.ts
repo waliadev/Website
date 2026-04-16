@@ -1,12 +1,12 @@
 // src/store/banner/banner.types.ts
 
 export interface Banner {
-  id: number;
+  banner_id: number;
+  title: string;
   image_url: string;
-  title:string
-  redirect_url?: string;
-  city_id: number;
-  status: "active" | "inactive";
+  link_url?: string;
+  position: string;
+  is_active: number;
 }
 
 export interface BannerState {

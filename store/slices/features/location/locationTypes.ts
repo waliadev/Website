@@ -3,6 +3,7 @@
 export interface City {
   id: number;
   name: string;
+  has_area:Number;
 }
 
 export interface Area {

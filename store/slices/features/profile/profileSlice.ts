@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "@/lib/api";
-import type { ProfileState, Profile, UpdateProfilePayload } from "./profileTypes";
+import { getToken } from "@/utils/token"; // ✅ FIX ADDED
+import type { ProfileState, Profile } from "./profileTypes";
 
 /* ================= INITIAL STATE ================= */
 
@@ -10,48 +11,51 @@ const initialState: ProfileState = {
   error: null,
 };
 
-
 /* ================= GET PROFILE ================= */
 
 export const getProfile = createAsyncThunk<
   Profile,
   void,
   { rejectValue: string }
->(
-  "profile/getProfile",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await api.get("/auth/users/profile");
-      return res.data.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Failed to fetch profile"
-      );
-    }
+>("profile/getProfile", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get("/auth/users/profile");
+    return res.data.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to fetch profile"
+    );
   }
-);
-
+});
 
 /* ================= UPDATE PROFILE ================= */
 
 export const updateProfile = createAsyncThunk<
-  Profile,
-  UpdateProfilePayload,
+  any,
+  FormData,
   { rejectValue: string }
->(
-  "profile/updateProfile",
-  async (payload, { rejectWithValue }) => {
-    try {
-      const res = await api.patch("auth/users/profile", payload);
-      return res.data.data;
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Profile update failed"
-      );
-    }
-  }
-);
+>("profile/updateProfile", async (data, { rejectWithValue }) => {
+  try {
+    const token = getToken(); // ✅ now works
 
+    const response = await api.put(
+      "/auth/users/update/profile",
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error?.response?.data?.message || "Update failed"
+    );
+  }
+});
 
 /* ================= SLICE ================= */
 
@@ -66,9 +70,7 @@ const profileSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-
       /* ===== GET PROFILE ===== */
-
       .addCase(getProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -84,9 +86,7 @@ const profileSlice = createSlice({
         state.error = action.payload || "Failed to fetch profile";
       })
 
-
       /* ===== UPDATE PROFILE ===== */
-
       .addCase(updateProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -105,5 +105,4 @@ const profileSlice = createSlice({
 });
 
 export const { clearProfileError } = profileSlice.actions;
-
 export default profileSlice.reducer;

@@ -16,6 +16,13 @@ import {
 } from "@/store/slices/features/location/locationSlice";
 import { showToast } from "@/utils/toast";
 
+/* ✅ TYPES */
+interface City {
+  id: number;
+  name: string;
+  has_area?: number;
+}
+
 export default function ExpertHelpModal({
   openModal,
   setOpenModal,
@@ -65,17 +72,20 @@ export default function ExpertHelpModal({
 
   /* ================= CITY ================= */
 
-  const handleCityChange = (e: any) => {
+  const handleCityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const cityId = Number(e.target.value);
-    const selectedCity = cities.find((c: any) => c.id === cityId);
+
+    const selectedCity = (cities as City[]).find(
+      (c) => c.id === cityId
+    );
 
     setSelectedCityId(cityId);
     setSelectedAreaId(null);
     setSelectedLocalityId(null);
 
-    handleChange("location_id", cityId); // fallback
+    handleChange("location_id", cityId);
 
-    if (selectedCity?.has_area === 1) {
+    if (Number(selectedCity?.has_area) === 1) {
       dispatch(fetchAreas({ id: cityId }));
     } else {
       dispatch(fetchLocalities({ cityId }));
@@ -84,7 +94,7 @@ export default function ExpertHelpModal({
 
   /* ================= AREA ================= */
 
-  const handleAreaChange = (e: any) => {
+  const handleAreaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const areaId = Number(e.target.value);
 
     setSelectedAreaId(areaId);
@@ -100,7 +110,7 @@ export default function ExpertHelpModal({
 
   /* ================= LOCALITY ================= */
 
-  const handleLocalityChange = (e: any) => {
+  const handleLocalityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const localityId = Number(e.target.value);
 
     setSelectedLocalityId(localityId);
@@ -109,13 +119,32 @@ export default function ExpertHelpModal({
 
   /* ================= SUBMIT ================= */
 
-  const handleSubmit = () => {
-    console.log("Final API Data:", formData);
+const handleSubmit = () => {
+  const payload = {
+    purpose: formData.you_want_to,
+    propertyType: formData.property_type,
+    propertySize: formData.residential_type,
 
-    dispatch(addExpertHelp(formData));
-    showToast("Your request has been submitted! We'll get back to you soon.", "success")
-    setOpenModal(false)
+    // ✅ IMPORTANT FIX
+    city: selectedCityId,
+    area: selectedAreaId,
+    locality: selectedLocalityId,
+
+    // ✅ name भी change
+    requirement: formData.your_requirements,
   };
+
+  console.log("Final API Data:", payload);
+
+  dispatch(addExpertHelp(payload));
+
+  showToast(
+    "Your request has been submitted! We'll get back to you soon.",
+    "success"
+  );
+
+  setOpenModal(false);
+};
 
   if (!openModal) return null;
 
@@ -202,7 +231,7 @@ export default function ExpertHelpModal({
             onChange={handleCityChange}
           >
             <option value="">Select City</option>
-            {cities?.map((city: any) => (
+            {(cities as City[])?.map((city) => (
               <option key={city.id} value={city.id}>
                 {city.name}
               </option>
@@ -211,8 +240,9 @@ export default function ExpertHelpModal({
         </div>
 
         {/* AREA */}
-        {cities.find((c: any) => c.id === selectedCityId)?.has_area ===
-          1 && (
+        {Number(
+          (cities as City[])?.find((c) => c.id === selectedCityId)?.has_area
+        ) === 1 && (
           <div className={styles.section}>
             <label>Area</label>
             <select
@@ -255,7 +285,7 @@ export default function ExpertHelpModal({
             onChange={(e) =>
               handleChange("your_requirements", e.target.value)
             }
-            placeholder="e.g. Looking for a 2BHK in a gated society with parking and metro access..."
+            placeholder="e.g. Looking for a 2BHK in a gated society..."
           />
         </div>
 

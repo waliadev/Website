@@ -26,8 +26,8 @@ export default function ProfileModal({ open, onClose }: Props) {
   });
 
   const [location, setLocation] = useState({
-    lat: "",
-    lng: "",
+    lat: 0,
+    lng: 0,
   });
 
   const [image, setImage] = useState<File | null>(null);
