@@ -26,6 +26,7 @@ export default function CitySection({
 
       <div className={styles.cityGrid}>
         {cities?.map((city: any) => {
+          console.log("City Name:",city.image)
           const IconComponent = iconMap[city.name];
 
           return (
@@ -36,7 +37,13 @@ export default function CitySection({
               onClick={() => handleCityClick(city)}
             >
               <div className={styles.cityIconWrap}>
-                {IconComponent && <IconComponent width={40} height={40} />}
+                   <img
+                  src={city.image}
+                  alt={city.name}
+                  width={40}
+                  height={40}
+                  style={{ objectFit: "contain" }}
+                />
               </div>
               <p style={{ color: "#335541" }}>{city.name}</p>
             </div>

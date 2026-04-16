@@ -30,10 +30,20 @@ export interface AgentsApiResponse {
   };
 }
 
+export interface AgentDetailApiResponse {
+  success: boolean;
+  message: string;
+  data: Agent;
+}
+
 /* ================= STATE ================= */
 
 export interface AgentState {
   agents: Agent[];
+  agentDetail: Agent | null;
+
   loading: boolean;
+  agentDetailLoading: boolean;
+
   error: string | null;
 }

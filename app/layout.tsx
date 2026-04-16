@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+// sirf layout.tsx me
 import "./globals.css";
 import ReduxProvider from "./providers";
 import GoogleAnalytics from "@/app/analytics/GoogleAnalytics"
+import ToastContainer  from "@/app/components/common/ToastContainer"
+import FCMProvider from "@/app/FCMProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -80,7 +83,10 @@ export default function RootLayout({
         {/* ✅ Google Analytics */}
         <GoogleAnalytics />
         <ReduxProvider>
+          {/* <FCMProvider /> */}
           {children}
+          <ToastContainer />
+
         </ReduxProvider>
       </body>
     </html>

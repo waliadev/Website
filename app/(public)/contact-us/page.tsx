@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "@/app/components/shared/components/Navbar";
 import Footer from "@/app/components/shared/components/Footer";
 
-import ContactHero from "@/app/components/contact/ContactHero";
 import ContactContent from "@/app/components/contact/ContactContent";
 import ContactLoader from "@/app/components/contact/ContactLoader";
 
@@ -14,7 +13,6 @@ import { fetchAppConfiguration } from "@/store/slices/features/config/configSlic
 import type { AppDispatch, RootState } from "@/store";
 
 export default function ContactPage() {
-
   const dispatch = useDispatch<AppDispatch>();
 
   const { contactUs, loading } = useSelector(
@@ -26,6 +24,15 @@ export default function ContactPage() {
     return Array.isArray(contactUs) ? contactUs[0] : contactUs;
   }, [contactUs]);
 
+  // ✅ JSON parse (IMPORTANT)
+  const extractJSON = (raw: string) => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (!contactUs) {
       dispatch(fetchAppConfiguration());
@@ -35,16 +42,12 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-{/* 
-      <ContactHero
-        title={contactData?.title}
-      /> */}
 
       {loading ? (
         <ContactLoader />
       ) : (
         <ContactContent
-          content={contactData?.content || ""}
+          content={extractJSON(contactData?.content || "")}
         />
       )}
 

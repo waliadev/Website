@@ -10,8 +10,8 @@ export default function BookmarkGrid({ agents }: Props) {
   return (
     <div className={styles.grid}>
 
-      {agents.map((agent, key) => (
-        <BookmarkCard key={key} agent={agent} />
+      {agents.map((agent: any, index: number) => (
+        <BookmarkCard key={index} agent={agent?.agent} />
       ))}
 
     </div>

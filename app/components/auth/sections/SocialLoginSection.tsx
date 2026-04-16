@@ -5,7 +5,7 @@ export default function SocialLoginSection() {
   return (
     <>
       <div className="divider">
-        <span>OR</span>
+        <span style={{textAlign:"center"}}>OR</span>
       </div>
 
       <GoogleLoginButton />

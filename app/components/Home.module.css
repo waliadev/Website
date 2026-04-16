@@ -8,6 +8,39 @@
   backdrop-filter: blur(6px);
 }
 
+
+.typing {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+
+  width: 0;
+  border-right: 3px solid #000;
+
+  animation: typing 3s steps(30, end) forwards,
+             blink 0.7s 4,
+             hideCursor 0.1s forwards;
+  animation-delay: 0s, 0s, 1s; /* 👈 typing ke baad cursor hide */
+}
+
+/* typing */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* blink */
+@keyframes blink {
+  50% { border-color: transparent }
+}
+
+/* 👇 FINAL FIX */
+@keyframes hideCursor {
+  to {
+    border-right: none;
+  }
+}
+
 /* ===== NAVBAR CARD ===== */
 .navbar {
   height: 74px;

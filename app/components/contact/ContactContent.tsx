@@ -1,69 +1,107 @@
-import styles from "./styles/Contact.module.css";
+"use client";
 
-export default function ContactContent({
-  content,
-}: {
-  content: string;
-}) {
+import DOMPurify from "dompurify";
+import styles from "@/app/components/about/styles/AboutContent.module.css"; 
+// 👆 same CSS reuse कर रहे हैं
 
-  const parseDraftContent = (raw: string) => {
-    try {
-      const parsed = JSON.parse(raw);
-      const entityMap = parsed?.entityMap || {};
+interface InlineStyleRange {
+  offset: number;
+  length: number;
+  style: string;
+}
 
-      return parsed?.blocks?.map((block: any, i: number) => {
-        let text = block.text;
-
-        const ranges = [
-          ...(block.inlineStyleRanges || []).map((r: any) => ({
-            ...r,
-            type: "STYLE",
-          })),
-          ...(block.entityRanges || []).map((r: any) => ({
-            ...r,
-            type: "ENTITY",
-          })),
-        ];
-
-        ranges
-          .sort((a: any, b: any) => b.offset - a.offset)
-          .forEach((range: any) => {
-            const before = text.slice(0, range.offset);
-            const middle = text.slice(
-              range.offset,
-              range.offset + range.length
-            );
-            const after = text.slice(range.offset + range.length);
-
-            if (range.type === "STYLE" && range.style === "BOLD") {
-              text = `${before}<strong>${middle}</strong>${after}`;
-            }
-
-            if (range.type === "ENTITY") {
-              const entity = entityMap[range.key];
-
-              if (entity?.type === "LINK") {
-                const url = entity?.data?.url || "#";
-
-                text = `${before}<a href="${url}" target="_blank" rel="noopener noreferrer" class="emailLink">${middle}</a>${after}`;
-              }
-            }
-          });
-
-        return (
-          <p key={i} dangerouslySetInnerHTML={{ __html: text }} />
-        );
-      });
-    } catch {
-      return <p>{raw}</p>;
-    }
+interface Block {
+  text: string;
+  type: string;
+  inlineStyleRanges: InlineStyleRange[];
+  data?: {
+    "text-align"?: string;
   };
+}
+
+interface Props {
+  content?: {
+    blocks: Block[];
+  };
+}
+
+export default function ContactContent({ content }: Props) {
+  if (!content?.blocks) return null;
+
+  const applyStyles = (text: string, ranges: InlineStyleRange[]) => {
+    let result = text;
+
+    const sortedRanges = [...ranges].sort(
+      (a, b) => b.offset - a.offset
+    );
+
+    sortedRanges.forEach((range) => {
+      const { offset, length, style } = range;
+
+      const before = result.slice(0, offset);
+      const target = result.substr(offset, length);
+      const after = result.slice(offset + length);
+
+      let styledText = target;
+
+      if (style === "BOLD") {
+        styledText = `<strong>${target}</strong>`;
+      }
+
+      if (style === "ITALIC") {
+        styledText = `<em>${target}</em>`;
+      }
+
+      if (style === "UNDERLINE") {
+        styledText = `<u>${target}</u>`;
+      }
+
+      if (style.startsWith("color-rgb")) {
+        const color = style.replace("color-", "");
+        styledText = `<span style="color:${color}">${target}</span>`;
+      }
+
+      result = before + styledText + after;
+    });
+
+    return result;
+  };
+
+  const generateHTML = () => {
+    return content.blocks
+      .map((block) => {
+        const text = applyStyles(
+          block.text,
+          block.inlineStyleRanges || []
+        );
+
+        const align = block?.data?.["text-align"] || "left";
+
+        switch (block.type) {
+          case "header-one":
+            return `<h1 style="text-align:center">${text}</h1>`;
+
+          case "header-three":
+            return `<h3 style="text-align:${align}">${text}</h3>`;
+
+          case "unstyled":
+            return `<p style="text-align:${align}">${text}</p>`;
+
+          default:
+            return "";
+        }
+      })
+      .join("");
+  };
+
+  const cleanHTML = DOMPurify.sanitize(generateHTML());
 
   return (
     <section className={styles.wrapper}>
-      <div className={styles.contentContainer}>
-        {parseDraftContent(content)}
-      </div>
+      <div
+        className={styles.container}
+        dangerouslySetInnerHTML={{ __html: cleanHTML }}
+      />
     </section>
   );
 }

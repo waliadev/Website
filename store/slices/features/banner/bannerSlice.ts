@@ -29,7 +29,7 @@ export const fetchActiveBanners = createAsyncThunk<
       const res = await api.get(
         `auth/users/banners/active?city_id=${payload.city_id}`
       );
-      return res.data;
+      return res.data.data;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch banners"

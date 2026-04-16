@@ -104,7 +104,8 @@ export default function Navbar() {
                         Bookmarks
                       </button>
 
-                      <button className="menuItem">
+                      <button className="menuItem"
+                        onClick={() => navigate(ROUTES.EXPERT_HELP)}>
                         <LifeBuoy size={18} />
                         Expert Help
                       </button>

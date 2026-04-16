@@ -14,6 +14,29 @@
   object-fit: cover;
 }
 
+
+.location-text {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.location-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.office {
+  font-weight: 600;
+  color: #222;
+}
+
+.area {
+  font-size: 12px;
+  color: #777;
+}
+
 .overlay {
   position: absolute;
   inset: 0;

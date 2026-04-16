@@ -13,6 +13,8 @@ import type {
 /* ================= INITIAL STATE ================= */
 
 const initialState: LocationState = {
+  selectedCityId: null,
+  selectedCityName: "",
   cities: [],
   areas: [],
   localities: [],
@@ -128,6 +130,10 @@ const locationSlice = createSlice({
     clearLocationError: (state) => {
       state.error = null;
     },
+    setSelectedCity: (state, action) => {
+      state.selectedCityId = action.payload.id;
+      state.selectedCityName = action.payload.name;
+    },
 
     /* 🔥 RESET AREAS + LOCALITIES */
     resetAreas: (state) => {
@@ -214,6 +220,7 @@ const locationSlice = createSlice({
 export const {
   clearLocationError,
   resetAreas,
+  setSelectedCity,
   resetLocalities,
   resetAllLocationData, // 🔥 IMPORTANT
 } = locationSlice.actions;

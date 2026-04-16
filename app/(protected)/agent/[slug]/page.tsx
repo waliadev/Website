@@ -2,16 +2,18 @@ import Navbar from "@/app/components/shared/components/Navbar";
 import Footer from "@/app/components/shared/components/Footer";
 import styles from "./AgentDetail.module.css";
 import BannerCarousel from "@/app/components/BannerCarousel";
-import AgentProfileCard from "@/app/components/AgentProfileCard";
+// import AgentProfileCard from "@/app/components/AgentProfileCard";
 import ReviewsSection from "@/app/components/ReviewsSection";
 import StickyContactSidebar from "@/app/components/StickyContactSidebar";
+import { fetchAgentDetail } from "@/store/slices/features/agents/agentListingSlice";
+import AgentDetailClient from "@/app/components/AgentProfileCard/AgentDetailClient";
 
 /* ================= TYPES ================= */
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 type Agent = {
@@ -31,12 +33,11 @@ type Agent = {
   image_urls: string[];
 };
 
-/* ================= STATIC DATA (TEMP) ================= */
+/* ================= DUMMY DATA ================= */
 
 const bannerImages = [
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600",
   "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1600",
-  "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600",
 ];
 
 const dummyAgent: Agent = {
@@ -48,55 +49,48 @@ const dummyAgent: Agent = {
   email: "virat@property.com",
   office_address: "Sector 62, Noida",
   city: "Noida",
-  rating: 5.0,
+  rating: 5,
   total_reviews: 24,
   verified: true,
   status: true,
-  description:
-    "Trusted real estate consultant specializing in residential and commercial properties.",
-  image_urls: [
-    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-    "https://images.unsplash.com/photo-1570129477492-45c003edd2be",
-  ],
+  description: "Trusted real estate consultant.",
+  image_urls: [],
 };
 
 /* ================= PAGE ================= */
 
-export default function AgentDetailPage({ params }: PageProps) {
-  const slug = params.slug;
+export default async function AgentDetailPage({ params }: PageProps) {
+  // ✅ await params (IMPORTANT FIX)
+  const { slug } = await params;
 
-  /* 🔥 Extract ID & Name */
+  console.log("Received slug:", slug);
+
+  // ❌ safety check
+  if (!slug) {
+    return <div style={{ padding: "40px" }}>Invalid Agent</div>;
+  }
+
+  // ✅ safe parsing
   const parts = slug.split("-");
-  const agentId = parts.pop(); // last = id
+  const agentId = parts.pop();
   const agentName = parts.join(" ");
 
-  console.log("Slug:", slug);
   console.log("Agent ID:", agentId);
   console.log("Agent Name:", agentName);
 
-  /* 🔥 API CALL (future) */
-  // const agent = await getAgentById(agentId);
-
-  const agent = dummyAgent; // temporary
+  const agent = dummyAgent;
 
   return (
     <>
       <Navbar />
 
       <div className={styles.page}>
-        {/* Banner */}
-        <BannerCarousel images={bannerImages} agent={agent} />
+        <BannerCarousel/>
 
         <div className={styles.wrapper}>
-          {/* LEFT CONTENT */}
           <div className={styles.left}>
-            <AgentProfileCard agent={agent} />
-            <ReviewsSection />
-          </div>
-
-          {/* RIGHT SIDEBAR */}
-          <div className={styles.right}>
-            <StickyContactSidebar agent={agent} />
+            <AgentDetailClient agentId={Number(agentId)} />
+            <ReviewsSection agentId={Number(agentId)} />
           </div>
         </div>
       </div>

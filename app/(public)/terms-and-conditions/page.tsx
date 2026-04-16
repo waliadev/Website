@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "@/app/components/shared/components/Navbar";
 import Footer from "@/app/components/shared/components/Footer";
 
-import TermsHero from "@/app/components/terms/TermsHero";
 import TermsContent from "@/app/components/terms/TermsContent";
 import TermsLoader from "@/app/components/terms/TermsLoader";
 
@@ -14,7 +13,6 @@ import { fetchAppConfiguration } from "@/store/slices/features/config/configSlic
 import type { AppDispatch, RootState } from "@/store";
 
 export default function TermsPage() {
-
   const dispatch = useDispatch<AppDispatch>();
 
   const { terms, loading } = useSelector(
@@ -26,6 +24,15 @@ export default function TermsPage() {
     return Array.isArray(terms) ? terms[0] : terms;
   }, [terms]);
 
+  // ✅ JSON parse (IMPORTANT)
+  const extractJSON = (raw: string) => {
+    try {
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
     if (!terms) {
       dispatch(fetchAppConfiguration());
@@ -36,12 +43,12 @@ export default function TermsPage() {
     <>
       <Navbar />
 
-      {/* <TermsHero title={termsData?.title} /> */}
-
       {loading ? (
         <TermsLoader />
       ) : (
-        <TermsContent content={termsData?.content || ""} />
+        <TermsContent
+          content={extractJSON(termsData?.content || "")}
+        />
       )}
 
       <Footer />

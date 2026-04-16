@@ -274,6 +274,20 @@ label {
 }
 
 
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.divider span {
+  margin: 0 10px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+
 .divider::before,
 .divider::after {
   content: "";
@@ -281,6 +295,8 @@ label {
   height: 1px;
   background: #e2e8f0;
 }
+
+
 
 .termsText {
   text-align: center;
@@ -343,6 +359,7 @@ label {
 
 /* ================= RIGHT SIDE ================= */
 .verify-right {
+overflow: visible !important;
 display:flex;
 justify-content:center;
 align-items:center;
@@ -511,6 +528,7 @@ padding:30px;
   }
 
    .verify-right {
+   overflow: visible !important;
     min-height: auto;
     padding: 15px;
     padding-bottom: 170px;
@@ -545,6 +563,7 @@ padding:30px;
 
   /* 🔥 GAP REMOVE */
   .verify-right {
+      overflow: visible !important;
     min-height: auto;
     padding: 15px;
     margin-top: 0;
@@ -602,6 +621,10 @@ padding:30px;
 
 /* ================= NAVBAR ================= */
 .navbar {
+    position: sticky;   /* 🔥 ADD THIS */
+  top: 0;             /* 🔥 ADD THIS */
+  z-index: 1000;      /* 🔥 ADD THIS */
+
   width: 100%;
   max-width: 1400px;
   height: 74px;

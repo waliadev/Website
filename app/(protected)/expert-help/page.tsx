@@ -65,18 +65,10 @@ export default function ExpertHelpPage() {
           />
 
           <HelpCard
-            icon={<Mail size={22} />}
-            title="Email Support"
-            desc="Send us your query and we'll respond quickly."
-            action="Send Email"
-            onClick={handleEmail}
-          />
-
-          <HelpCard
             icon={<LifeBuoy size={22} />}
-            title="Help Center"
-            desc="Browse FAQs and helpful resources."
-            action="View Articles"
+            title="Expert Help Center"
+            desc="Access FAQs, guides, and resources for quick assistance."
+            action="Get Help"
             onClick={() => setOpenModal(true)}
           />
 

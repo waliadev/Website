@@ -42,7 +42,7 @@ export const updateProfile = createAsyncThunk<
   "profile/updateProfile",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await api.patch("v1/auth/users/profile", payload);
+      const res = await api.patch("auth/users/profile", payload);
       return res.data.data;
     } catch (error: any) {
       return rejectWithValue(

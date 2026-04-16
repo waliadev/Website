@@ -73,7 +73,8 @@ const handleAgentDetails = (agentId: number, agentName: string): void => {
     return;
   }
   const slug = createSlug(agentName);
-  router.push(`/agent/${slug}-${agentId}`);
+  console.log(`/agent/${slug}-${agentId}${Date.now()}`);
+  router.push(`/agent/${slug}-${agentId}${Date.now()}`);
 };
 
   return (

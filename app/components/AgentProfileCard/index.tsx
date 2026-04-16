@@ -8,6 +8,7 @@ import {
   Phone,
   MessageCircle,
   MapPin,
+  Mail
 } from "lucide-react";
 
 interface AgentProps {
@@ -18,21 +19,38 @@ export default function AgentProfileCard({ agent }: AgentProps) {
   const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
-    if (!agent?.image_urls?.length) return;
+    if (!agent?.images?.length) return;
 
     const id = setInterval(() => {
-      setActiveImg((prev) => (prev + 1) % agent.image_urls.length);
+      setActiveImg((prev) => (prev + 1) % agent.images.length);
     }, 6000);
 
     return () => clearInterval(id);
-  }, [agent?.image_urls?.length]);
+  }, [agent?.images?.length]);
+
+  const handleShare = async () => {
+  try {
+    if (navigator.share) {
+      await navigator.share({
+        title: agent.name,
+        text: `Check out this agent: ${agent.name}`,
+        url: window.location.href,
+      });
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      alert("Link copied!");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   return (
     <div className="agent-page">
       {/* HERO */}
       <div className="hero">
         <img
-          src={agent.image_urls?.[activeImg]}
+          src={agent.images?.[activeImg]}
           alt={agent.name}
           className="hero-img"
         />
@@ -49,17 +67,28 @@ export default function AgentProfileCard({ agent }: AgentProps) {
               <Star size={14} fill="#fff" stroke="#fff" />
             </div>
             <span className="review-text">
-              {agent.total_reviews} reviews
+              {agent.total_reviews ? `${agent.total_reviews} reviews` : "No reviews"}
             </span>
             <span className="dot">•</span>
             <span className="location-text">
               <MapPin size={14} />
-              {agent.office_address}
+               
+  <div className="location-wrapper">
+    {/* 🏢 Office Detail */}
+    <div className="office">
+      {agent.office_address || "Office not available"}
+    </div>
+
+    {/* 📍 Area / Locality */}
+    <div className="area">
+      {agent.address || "Location not available"}
+    </div>
+  </div>
             </span>
           </div>
 
-          <h1 className="agent-name">{agent.name}</h1>
-          <p className="agency-name">{agent.agency_name}</p>
+          <h1 className="agent-name">{agent.agency_name}</h1>
+          <p className="agency-name">{agent.name}</p>
 
           <p className="description">{agent.description}</p>
         </div>
@@ -87,7 +116,7 @@ export default function AgentProfileCard({ agent }: AgentProps) {
 
           <div className="icon-row">
             <Bookmark size={20} />
-            <Share2 size={20} />
+            <Share2 size={20} onClick={handleShare} />
           </div>
         </div>
       </div>

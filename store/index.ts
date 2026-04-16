@@ -7,6 +7,8 @@ import agentListingReducer from "@/store/slices/features/agents/agentListingSlic
 import interactionReducer from "@/store/slices/features/interactions/interactionSlice"
 import bookmarkReducer from "@/store/slices/features/bookmark/bookmarkSlice"
 import profileReducer from "@/store/slices/features/profile/profileSlice";
+import reviewReducer from "@/store/slices/features/review/reviewSlice";
+import { deviceTokenReducer } from "@/store//slices/features/deviceToken/deviceTokenSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +20,9 @@ export const store = configureStore({
     interaction: interactionReducer,
     bookmark: bookmarkReducer,
     profile: profileReducer,
+    review: reviewReducer,
+    deviceToken: deviceTokenReducer,
+
   },
 });
 

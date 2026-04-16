@@ -15,8 +15,8 @@ export default function AgentContent({
   return (
     <div className={styles.content}>
       <div className={styles.textBlock}>
-        <h3 className={styles.name}>{agent.name}</h3>
-        <p className={styles.agency}>{agent.agency_name}</p>
+        <h3 className={styles.name}>{agent.agency_name}</h3>
+        <p className={styles.agency}>{agent.name}</p>
 
         <div className={styles.location}>
           <MapPin size={14} />

@@ -19,6 +19,9 @@ export interface Locality {
 }
 
 export interface LocationState {
+  selectedCityId: number | null;   // ✅ add this
+  selectedCityName: string;        // ✅ add this
+
   cities: City[];
   areas: Area[];
   localities: Locality[];

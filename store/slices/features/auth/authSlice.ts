@@ -70,7 +70,7 @@ export const resendOtp = createAsyncThunk<
   "auth/resendOtp",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await api.post("auth/users/resend-otp", payload);
+      const res = await api.post("auth/users/resent-otp", payload);
       return res.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -91,7 +91,7 @@ export const loginWithGoogle = createAsyncThunk<
   "auth/loginWithGoogle",
   async (payload, { rejectWithValue }) => {
     try {
-      const res = await api.post("v1/auth/user/auth/google", payload);
+      const res = await api.post("auth/user/auth/google/mobile", payload);
       return res.data;
     } catch (error: any) {
       return rejectWithValue(

@@ -1,79 +1,100 @@
 "use client";
 
 import styles from "@/app/(protected)/bookmarks/Bookmarks.module.css";
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
-import { useAppDispatch } from "@/store/hooks";
-import { toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
-import { PUBLIC_BASE_URL } from "@/constants/api";
+export default function BookmarkCard({ index, agent }: any) {
+  console.log(agent)
 
-export default function BookmarkCard({ agent }: any){
+  // ✅ handlers
+  const handleCall = () => {
+    if (agent.phone) {
+      window.location.href = `tel:${agent.phone}`;
+    }
+  };
 
-  const router = useRouter();
-  const dispatch = useAppDispatch();
+  const handleWhatsApp = () => {
+    if (agent.whatsapp_number) {
+      window.open(
+        `https://wa.me/${agent.whatsapp_number}`,
+        "_blank"
+      );
+    }
+  };
 
-  return(
+  const handleLocation = () => {
+    if (agent.latitude && agent.longitude) {
+      window.open(
+        `https://www.google.com/maps?q=${agent.latitude},${agent.longitude}`,
+        "_blank"
+      );
+    }
+  };
 
-    <motion.div
-      whileHover={{ y: -8 }}
-      className={styles.card}
-    >
+  return (
+    <motion.div whileHover={{ y: -8 }} className={styles.card}>
 
-      <div className={styles.imageWrap}>
-
-        <Image
-          src={
-            agent.image_urls?.[0]
-              ? `${PUBLIC_BASE_URL}/${agent.image_urls[0]}`
-              : "/no-image.png"
-          }
-          alt={agent.name}
-          fill
+      {/* IMAGE */}
+      <div className={styles.imageWrapper}>
+        <img
+          src={agent.images?.[0] || "/house.jpg"}
+          alt="agent"
           className={styles.image}
         />
-
-        <button
-          className={styles.bookmark}
-          onClick={()=>dispatch(toggleBookmark(agent.agent_id))}
-        >
-          ❤️
-        </button>
-
       </div>
 
+      {/* CONTENT */}
       <div className={styles.content}>
 
-        <h3>{agent.name}</h3>
-
-        <p className={styles.agency}>
-          {agent.agency_name}
-        </p>
-
-        <p className={styles.address}>
-          {agent.address}
-        </p>
-
-        <div className={styles.footer}>
+        {/* TITLE + RATING */}
+        <div className={styles.headerRow}>
+          <h3>{agent.name || "Agent Name"}</h3>
 
           <span className={styles.rating}>
-            ⭐ {agent.rating}
+            ⭐ {agent.rating || "4.5"}
+          </span>
+        </div>
+
+        {/* ACTIONS */}
+        <div className={styles.actions}>
+
+          {/* CALL */}
+          <span onClick={handleCall} title="Call">
+            📞
           </span>
 
-          <button
-            className={styles.viewBtn}
-            onClick={()=>router.push(`/agents/${agent.agent_id}`)}
-          >
-            View
-          </button>
+          {/* WHATSAPP */}
+          <span onClick={handleWhatsApp} title="WhatsApp">
+            💬
+          </span>
 
+
+
+          {/* BOOKMARK */}
+          <span title="Saved">
+            ❤️
+          </span>
+
+          {/* SHARE */}
+          <span
+            onClick={() =>
+              navigator.share?.({
+                title: agent.name,
+                url: window.location.href,
+              })
+            }
+            title="Share"
+          >
+            🔗
+          </span>
+        </div>
+
+        {/* ADDRESS */}
+        <div className={styles.address}>
+          📍 {agent.city || "Location not available"}
         </div>
 
       </div>
-
     </motion.div>
-
   );
-
 }

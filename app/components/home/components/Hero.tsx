@@ -10,6 +10,7 @@ import {
   fetchLocalities,
   searchLocalities,
   resetAllLocationData,
+  setSelectedCity,
 } from "@/store/slices/features/location/locationSlice";
 
 import { fetchAgentsByLocation } from "@/store/slices/features/agents/agentListingSlice";
@@ -23,6 +24,7 @@ import AreaSection from "@/app/components/home/sections/herosection/AreaSection"
 import LocalitySection from "@/app/components/home/sections/herosection/LocalitySection";
 import HeroRight from "@/app/components/home/sections/herosection/HeroRight";
 import { HOME_HERO } from "@/constants/home";
+import { text } from "stream/consumers";
 
 export default function Hero() {
   const dispatch = useDispatch<AppDispatch>();
@@ -49,6 +51,13 @@ export default function Hero() {
     }
   }, [selectedCityId, dispatch]);
 
+
+  useEffect(()=>{
+     if(searchedLocalities.length >0){
+      setSelectedCityId(searchedLocalities[0].cityId)
+     }
+  },[cities,areas,localities,searchedLocalities])
+
   /* ================= FETCH AGENTS ================= */
   useEffect(() => {
     if (selectedLocalityId) {
@@ -62,6 +71,8 @@ export default function Hero() {
     setSelectedCityName(city.name);
     setSelectedAreaId(null);
     setSelectedLocalityId(null);
+    dispatch(setSelectedCity({ id: city.id, name: city.name }));
+
 
     if (city.has_area === 1) {
       // ✅ fetch areas
@@ -98,7 +109,9 @@ export default function Hero() {
       <div className={styles.heroLeft}>
         <h1 className={styles.heroTitle}>
           {HOME_HERO.TITLE} <br />
-          {HOME_HERO.TITLE_SECOND}
+          <span>
+            {HOME_HERO.TITLE_SECOND}
+          </span>
         </h1>
 
         <p className={styles.heroDesc}>

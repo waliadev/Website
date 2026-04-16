@@ -4,32 +4,18 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
-import { verifyOtp } from "@/store/slices/features/auth/authSlice";
+import { verifyOtp, resendOtp } from "@/store/slices/features/auth/authSlice";
 import type { AppDispatch, RootState } from "@/store";
 import OtpInput from "@/app/components/verify/components/OtpInput";
+import { showToast } from "@/utils/toast";
 
-/* ================= TYPES ================= */
 
 interface VerifyRightProps {
   phone: string;
   expiryTime?: number | null;
 }
 
-type User = {
-  id: number;
-  name: string;
-  phone: string;
-};
-
-
-
-/* ================= COMPONENT ================= */
-
-export default function VerifyRight({
-  phone,
-  expiryTime,
-}: VerifyRightProps) {
-
+export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
@@ -41,8 +27,9 @@ export default function VerifyRight({
   const [timeLeft, setTimeLeft] = useState(180);
   const [isExpired, setIsExpired] = useState(false);
 
-  /* ================= OTP TIMER ================= */
+  /* ================= TOAST HELPER ================= */
 
+  /* ================= OTP TIMER ================= */
   useEffect(() => {
     if (!expiryTime) return;
 
@@ -65,8 +52,6 @@ export default function VerifyRight({
     return () => clearInterval(interval);
   }, [expiryTime]);
 
-  /* ================= TIME FORMAT ================= */
-
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
@@ -74,15 +59,16 @@ export default function VerifyRight({
   };
 
   /* ================= VERIFY OTP ================= */
-
   const handleVerify = async () => {
-    if (otp.length !== 6) {
-      alert("Enter valid 6 digit OTP");
+    // ⚠️ OTP length check
+    if (otp.length < 6) {
+      showToast("Please enter 6 digit OTP ⚠️", "info");
       return;
     }
 
+    // ❌ Expired check
     if (isExpired) {
-      alert("OTP expired. Please resend OTP.");
+      showToast("OTP expired. Please resend OTP ⏳", "error");
       return;
     }
 
@@ -91,37 +77,44 @@ export default function VerifyRight({
         verifyOtp({ phone, otp })
       ).unwrap();
 
-      console.log(result, "Verify result");
+      // ✅ SUCCESS
+      showToast("OTP verified successfully ✅", "success");
 
-      /* ✅ Save Token */
       if (result?.tokens) {
-        Cookies.set("token", result.tokens, {
-          expires: 7,
-          path: "/",
-          sameSite: "Lax",
-        });
+        Cookies.set("token", result.tokens, { expires: 7 });
       }
 
-      /* ✅ Save User */
       if (result?.data) {
-        Cookies.set("user", JSON.stringify(result.data), {
-          expires: 7,
-          path: "/",
-          sameSite: "Lax",
-        });
+        Cookies.set("user", JSON.stringify(result.data), { expires: 7 });
       }
 
-      /* ✅ Redirect after success */
-      router.push("/"); // change route if needed
+      // redirect after toast
+      setTimeout(() => {
+        router.push("/");
+      }, 1500);
 
     } catch (error) {
-      console.log("OTP Verify Failed ❌", error);
-      alert("OTP verification failed");
+      // ❌ ERROR
+      showToast("Invalid OTP ❌", "error");
     }
   };
 
-  /* ================= UI ================= */
+  /* ================= RESEND OTP ================= */
+  const handleResendOtp = async () => {
+    try {
+      await dispatch(resendOtp({ phone })).unwrap();
 
+      showToast("OTP sent again ✅", "success");
+      setIsExpired(false);
+
+    } catch {
+      showToast("Failed to resend OTP ❌", "error");
+    }
+  };
+
+  if (!phone) return null;
+
+  /* ================= UI ================= */
   return (
     <div className="verify-right">
       <div className="verify-card">
@@ -156,7 +149,16 @@ export default function VerifyRight({
 
         <p className="verify-resend">
           Didn’t receive code?
-          <span className="resend-link"> Resend OTP</span>
+          <span
+            className="resend-link"
+            onClick={!isExpired ? undefined : handleResendOtp}
+            style={{
+              cursor: isExpired ? "pointer" : "not-allowed",
+              opacity: isExpired ? 1 : 0.5,
+            }}
+          >
+            Resend OTP
+          </span>
         </p>
 
       </div>

@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Navbar from "@/app/components/shared/components/Navbar";
 import Footer from "@/app/components/shared/components/Footer";
 
-import AboutHero from "@/app/components/about/AboutHero";
 import AboutContent from "@/app/components/about/AboutContent";
 import AboutLoader from "@/app/components/about/AboutLoader";
 
@@ -14,7 +13,6 @@ import { fetchAppConfiguration } from "@/store/slices/features/config/configSlic
 import type { AppDispatch, RootState } from "@/store";
 
 export default function AboutPage() {
-
   const dispatch = useDispatch<AppDispatch>();
 
   const { aboutUs, loading } = useSelector(
@@ -26,12 +24,11 @@ export default function AboutPage() {
     return Array.isArray(aboutUs) ? aboutUs[0] : aboutUs;
   }, [aboutUs]);
 
-  const extractText = (raw: string) => {
+  const extractJSON = (raw: string) => {
     try {
-      const parsed = JSON.parse(raw);
-      return parsed?.blocks?.map((b: any) => b.text).join("\n\n");
+      return JSON.parse(raw);
     } catch {
-      return raw;
+      return null;
     }
   };
 
@@ -45,13 +42,11 @@ export default function AboutPage() {
     <>
       <Navbar />
 
-      {/* <AboutHero /> */}
-
       {loading ? (
         <AboutLoader />
       ) : (
         <AboutContent
-          content={extractText(aboutData?.content || "")}
+          content={extractJSON(aboutData?.content || "")}
         />
       )}
 
