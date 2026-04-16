@@ -90,6 +90,8 @@ export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
         Cookies.set("user", JSON.stringify(result.data), { expires: 7 });
       }
 
+      console.log("cbdh")
+
       // redirect after toast
       setTimeout(() => {
         router.push("/");
