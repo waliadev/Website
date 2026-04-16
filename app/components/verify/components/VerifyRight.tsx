@@ -91,6 +91,7 @@ export default function VerifyRight({ phone, expiryTime }: VerifyRightProps) {
       }
 
       console.log("cbdh")
+      console.log(result)
 
       // redirect after toast
       setTimeout(() => {
