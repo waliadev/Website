@@ -18,7 +18,7 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
     (state) => state.review
   );
 
-  console.log(reviews,"reviews")
+  console.log(reviews, "reviews")
 
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(1);
@@ -28,8 +28,11 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
   // ✅ GET API call
   useEffect(() => {
     if (agentId) {
-       agentId = Number(agentId.toString()[0]);
-      dispatch(fetchReviews(agentId));
+      const str = agentId.toString();
+
+      // 👉 extract only starting digits until large number starts
+      const cleanAgentId = parseInt(str.slice(0, str.length - 13));
+      dispatch(fetchReviews(cleanAgentId));
     }
   }, [agentId, dispatch]);
 
@@ -42,10 +45,13 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
 
   // ✅ POST API
   const handleSubmit = async () => {
-    agentId = Number(agentId.toString()[0]);
+    const str = agentId.toString();
+
+    // 👉 extract only starting digits until large number starts
+    const cleanAgentId = parseInt(str.slice(0, str.length - 13));
     await dispatch(
       addReview({
-        agent_id: agentId,
+        agent_id: cleanAgentId,
         comment,
         rating,
       })
@@ -87,9 +93,9 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
               const count = reviews.filter((r) => Number(r.rating) === star).length;
               const percentage =
                 totalReviews > 0 ? (count / totalReviews) * 100 : 0;
-                {
-                  console.log(count,percentage)
-                }
+              {
+                console.log(count, percentage)
+              }
 
               return (
                 <div key={star} className={styles.barRow}>

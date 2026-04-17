@@ -17,6 +17,8 @@ interface AgentProps {
 
 export default function AgentProfileCard({ agent }: AgentProps) {
   const [activeImg, setActiveImg] = useState(0);
+  const [distance, setDistance] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (!agent?.images?.length) return;
@@ -29,21 +31,69 @@ export default function AgentProfileCard({ agent }: AgentProps) {
   }, [agent?.images?.length]);
 
   const handleShare = async () => {
-  try {
-    if (navigator.share) {
-      await navigator.share({
-        title: agent.name,
-        text: `Check out this agent: ${agent.name}`,
-        url: window.location.href,
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: agent.name,
+          text: `Check out this agent: ${agent.name}`,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Link copied!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+
+  const handleLocation = () => {
+    if (!agent.latitude || !agent.longitude) {
+      alert("Agent location not available");
+      return;
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const userLat = pos.coords.latitude;
+        const userLng = pos.coords.longitude;
+
+        const dist = calculateDistance(
+          userLat,
+          userLng,
+          agent.latitude,
+          agent.longitude
+        );
+
+        setDistance(dist.toFixed(2));
+
+        // 🌍 Open Google Maps
+        window.open(
+          `https://www.google.com/maps/dir/${userLat},${userLng}/${agent.latitude},${agent.longitude}`,
+          "_blank"
+        );
       });
     } else {
-      await navigator.clipboard.writeText(window.location.href);
-      alert("Link copied!");
+      alert("Geolocation not supported");
     }
-  } catch (err) {
-    console.log(err);
-  }
-};
+  };
 
   return (
     <div className="agent-page">
@@ -72,18 +122,18 @@ export default function AgentProfileCard({ agent }: AgentProps) {
             <span className="dot">•</span>
             <span className="location-text">
               <MapPin size={14} />
-               
-  <div className="location-wrapper">
-    {/* 🏢 Office Detail */}
-    <div className="office">
-      {agent.office_address || "Office not available"}
-    </div>
 
-    {/* 📍 Area / Locality */}
-    <div className="area">
-      {agent.address || "Location not available"}
-    </div>
-  </div>
+              <div className="location-wrapper">
+                {/* 🏢 Office Detail */}
+                <div className="office">
+                  {agent.office_address || "Office not available"}
+                </div>
+
+                {/* 📍 Area / Locality */}
+                <div className="area">
+                  {agent.address || "Location not available"}
+                </div>
+              </div>
             </span>
           </div>
 
@@ -108,8 +158,10 @@ export default function AgentProfileCard({ agent }: AgentProps) {
             <MessageCircle size={16} />
             WhatsApp
           </a>
-
-          <button className="btn secondary">
+          <button
+            className="btn secondary"
+            onClick={handleLocation}
+          >
             <MapPin size={16} />
             View Location
           </button>
