@@ -35,7 +35,7 @@ export default function Footer() {
             </a>
 
             <a
-              href={FOOTER.STORE_LINKS.PLAY_STORE}
+              href={"https://play.google.com/store/apps/details?id=com.brokerdash.app"}
               target="_blank"
               rel="noopener noreferrer"
             >

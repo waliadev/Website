@@ -67,7 +67,8 @@ export default function SearchSection({
                 {item.locality_name}
               </div>
               <div className={styles.breadcrumb}>
-                📍 {item.city_name} → {item.area_name}
+                📍 {item.city_name} {item.area_name && ` → ${item.area_name}`}
+
               </div>
             </div>
           ))}

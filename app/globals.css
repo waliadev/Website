@@ -663,11 +663,11 @@ padding:30px;
 }
 
 .brand span:first-child {
-  color: #0f172a; /* Broker */
+  color: #0C1C45; /* Broker */
 }
 
 .brand span:last-child {
-  color: #f97316; /* Dash */
+  color: #ff6700; /* Dash */
   margin-left: 3px;
 }
 
