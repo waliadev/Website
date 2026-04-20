@@ -11,7 +11,8 @@ export default function BookmarkCard({ agent, office }: any) {
   const dispatch = useAppDispatch();
 
   // 📞 Call
-  const handleCall = () => {
+  const handleCall = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (agent.phone) {
       window.location.href = `tel:${agent.phone}`;
       dispatch(
@@ -26,7 +27,8 @@ export default function BookmarkCard({ agent, office }: any) {
   };
 
   // 💬 WhatsApp
-  const handleWhatsApp = () => {
+  const handleWhatsApp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (agent.whatsapp_number) {
       window.open(`https://wa.me/${agent.whatsapp_number}`, "_blank");
       dispatch(
@@ -41,7 +43,8 @@ export default function BookmarkCard({ agent, office }: any) {
   };
 
   // 📍 Location
-  const handleLocation = () => {
+  const handleLocation = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     if (agent.latitude && agent.longitude) {
       window.open(
         `https://www.google.com/maps?q=${agent.latitude},${agent.longitude}`,
@@ -96,9 +99,9 @@ export default function BookmarkCard({ agent, office }: any) {
 
         {/* ACTION BUTTONS */}
         <div className={styles.actions}>
-          <button onClick={handleCall}>📞</button>
-          <button onClick={handleWhatsApp}>💬</button>
-          <button onClick={handleLocation}>📍</button>
+          <button onClick={() => handleCall()}>📞</button>
+          <button onClick={() => handleWhatsApp()}>💬</button>
+          <button onClick={() => handleLocation()}>📍</button>
         </div>
       </div>
     </motion.div>

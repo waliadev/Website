@@ -25,13 +25,13 @@ export default function AgentContent({
       </div>
 
       <div className={styles.actions}>
-        <button onClick={handleCall} className={styles.callBtn}>
+        <button onClick={(e) => handleCall(e)} className={styles.callBtn}>
           <FiPhone size={16} />
           Call
         </button>
 
         <button
-          onClick={handleWhatsApp}
+          onClick={(e) => handleWhatsApp(e)}
           className={styles.whatsappBtn}
         >
           <FaWhatsapp size={16} />
@@ -40,7 +40,7 @@ export default function AgentContent({
 
         {token && (
           <button
-            onClick={handleBookmark}
+            onClick={(e) => handleBookmark(e)}
             className={`${styles.saveBtn} ${
               isSaved ? styles.activeSave : ""
             }`}

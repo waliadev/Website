@@ -46,13 +46,15 @@ export default function AgentCard({ agent }: { agent: Agent }) {
     dispatch(toggleBookmark(agent.agent_id));
   };
 
-  const handleCall = () => {
+  const handleCall = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     handleProtectedInteraction(dispatch, router, agent.agent_id, "call", () => {
       window.location.href = `tel:${agent.phone}`;
     });
   };
 
-  const handleWhatsApp = () => {
+  const handleWhatsApp = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     handleProtectedInteraction(
       dispatch,
       router,
