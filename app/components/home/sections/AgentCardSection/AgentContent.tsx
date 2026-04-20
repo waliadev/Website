@@ -20,7 +20,7 @@ export default function AgentContent({
 
         <div className={styles.location}>
           <MapPin size={14} />
-          <span>{agent.address}</span>
+          <span>{agent.office_address}</span>
         </div>
       </div>
 
