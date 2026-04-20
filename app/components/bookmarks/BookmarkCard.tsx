@@ -99,9 +99,9 @@ export default function BookmarkCard({ agent, office }: any) {
 
         {/* ACTION BUTTONS */}
         <div className={styles.actions}>
-          <button onClick={() => handleCall()}>📞</button>
-          <button onClick={() => handleWhatsApp()}>💬</button>
-          <button onClick={() => handleLocation()}>📍</button>
+          <button onClick={(e) => handleCall(e)}>📞</button>
+          <button onClick={(e) => handleWhatsApp(e)}>💬</button>
+          <button onClick={(e) => handleLocation(e)}>📍</button>
         </div>
       </div>
     </motion.div>
