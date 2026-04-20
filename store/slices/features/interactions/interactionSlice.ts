@@ -26,16 +26,14 @@ export const sendAgentInteraction = createAsyncThunk<
   async (payload, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
+      console.log(token,"nksd")
 
       // ✅ Native URLSearchParams (no qs)
-      const data = new URLSearchParams();
-      data.append("agentId", String(payload.agentId));
-      data.append("click_type", payload.click_type);
-      data.append("clicked_from", payload.clicked_from);
+      
 
       const response = await api.post(
         "/auth/users/interactions/click",
-        data,
+        payload,
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",

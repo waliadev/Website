@@ -6,12 +6,12 @@ type Props = {
 };
 
 export default function BookmarkGrid({ agents }: Props) {
-
+ console.log(agents,"is grid")
   return (
     <div className={styles.grid}>
 
       {agents.map((agent: any, index: number) => (
-        <BookmarkCard key={index} agent={agent?.agent} />
+        <BookmarkCard key={index} agent={agent?.agent} office={agent?.office} />
       ))}
 
     </div>

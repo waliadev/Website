@@ -2,37 +2,65 @@
 
 import styles from "@/app/(protected)/bookmarks/Bookmarks.module.css";
 import { motion } from "framer-motion";
+import { toggleBookmark, fetchBookmarks } from "@/store/slices/features/bookmark/bookmarkSlice";
+import { sendAgentInteraction } from "@/store/slices/features/interactions/interactionSlice";
 
-export default function BookmarkCard({ index, agent }: any) {
-  console.log(agent)
+import { useAppDispatch } from "@/store/hooks";
 
-  // ✅ handlers
+export default function BookmarkCard({ agent, office }: any) {
+  const dispatch = useAppDispatch();
+
+  // 📞 Call
   const handleCall = () => {
     if (agent.phone) {
       window.location.href = `tel:${agent.phone}`;
-    }
-  };
-
-  const handleWhatsApp = () => {
-    if (agent.whatsapp_number) {
-      window.open(
-        `https://wa.me/${agent.whatsapp_number}`,
-        "_blank"
+      dispatch(
+        sendAgentInteraction({
+          agentId: agent.id,
+          click_type: "call",
+          clicked_from: "browser",
+        })
       );
     }
+
   };
 
+  // 💬 WhatsApp
+  const handleWhatsApp = () => {
+    if (agent.whatsapp_number) {
+      window.open(`https://wa.me/${agent.whatsapp_number}`, "_blank");
+      dispatch(
+        sendAgentInteraction({
+          agentId: agent.id,
+          click_type: "whatsapp",
+          clicked_from: "browser",
+        })
+      );
+    }
+
+  };
+
+  // 📍 Location
   const handleLocation = () => {
     if (agent.latitude && agent.longitude) {
       window.open(
         `https://www.google.com/maps?q=${agent.latitude},${agent.longitude}`,
         "_blank"
       );
+      dispatch(
+        sendAgentInteraction({
+          agentId: agent.id,
+          click_type: "map",
+          clicked_from: "browser",
+        })
+      );
     }
+
+
   };
 
   return (
-    <motion.div whileHover={{ y: -8 }} className={styles.card}>
+    <motion.div whileHover={{ y: -6 }} className={styles.card}>
 
       {/* IMAGE */}
       <div className={styles.imageWrapper}>
@@ -41,59 +69,37 @@ export default function BookmarkCard({ index, agent }: any) {
           alt="agent"
           className={styles.image}
         />
+
+        {/* ❤️ Bookmark */}
+        <button className={styles.bookmark}
+          onClick={() => {
+            dispatch(toggleBookmark(agent.id));
+            dispatch(fetchBookmarks(agent.id));
+          }}>
+          ❤️
+        </button>
       </div>
 
       {/* CONTENT */}
       <div className={styles.content}>
 
-        {/* TITLE + RATING */}
-        <div className={styles.headerRow}>
-          <h3>{agent.name || "Agent Name"}</h3>
+        <h3 className={styles.name}>{agent.name || "Agent Name"}</h3>
+        <p className={styles.agency}>{agent.agency_name || "Agency Name"}</p>
 
-          <span className={styles.rating}>
-            ⭐ {agent.rating || "4.5"}
-          </span>
+        <div className={styles.rating}>
+          ⭐ {agent.rating || "4.5"}
         </div>
 
-        {/* ACTIONS */}
-        <div className={styles.actions}>
-
-          {/* CALL */}
-          <span onClick={handleCall} title="Call">
-            📞
-          </span>
-
-          {/* WHATSAPP */}
-          <span onClick={handleWhatsApp} title="WhatsApp">
-            💬
-          </span>
-
-
-
-          {/* BOOKMARK */}
-          <span title="Saved">
-            ❤️
-          </span>
-
-          {/* SHARE */}
-          <span
-            onClick={() =>
-              navigator.share?.({
-                title: agent.name,
-                url: window.location.href,
-              })
-            }
-            title="Share"
-          >
-            🔗
-          </span>
-        </div>
-
-        {/* ADDRESS */}
         <div className={styles.address}>
-          📍 {agent.city || "Location not available"}
+          📍 {office?.city || office?.address || "Location not available"}
         </div>
 
+        {/* ACTION BUTTONS */}
+        <div className={styles.actions}>
+          <button onClick={handleCall}>📞</button>
+          <button onClick={handleWhatsApp}>💬</button>
+          <button onClick={handleLocation}>📍</button>
+        </div>
       </div>
     </motion.div>
   );

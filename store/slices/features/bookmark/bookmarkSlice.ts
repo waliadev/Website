@@ -29,9 +29,9 @@ const initialState: BookmarkState = {
 
 export const fetchBookmarks = createAsyncThunk<
   Agent[],
-  void,
+  number | undefined,
   { rejectValue: string }
->("bookmark/fetchBookmarks", async (_, { rejectWithValue }) => {
+>("bookmark/fetchBookmarks", async (agent_id, { rejectWithValue }) => {
   try {
     const response = await api.get("/auth/users/bookmark");
 

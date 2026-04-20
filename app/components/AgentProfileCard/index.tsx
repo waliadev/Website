@@ -13,9 +13,14 @@ import {
 
 interface AgentProps {
   agent: any;
-}
+}import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
+import { sendAgentInteraction } from "@/store/slices/features/interactions/interactionSlice";
+
+
 
 export default function AgentProfileCard({ agent }: AgentProps) {
+  const dispatch = useAppDispatch();
   const [activeImg, setActiveImg] = useState(0);
   const [distance, setDistance] = useState<string | null>(null);
 
@@ -47,7 +52,7 @@ export default function AgentProfileCard({ agent }: AgentProps) {
     }
   };
 
-    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
     const R = 6371; // km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLon = (lon2 - lon1) * (Math.PI / 180);
@@ -55,9 +60,9 @@ export default function AgentProfileCard({ agent }: AgentProps) {
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
       Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
 
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
@@ -90,9 +95,21 @@ export default function AgentProfileCard({ agent }: AgentProps) {
           "_blank"
         );
       });
+      dispatch(
+        sendAgentInteraction({
+          agentId: agent.id,
+          click_type: "map",
+          clicked_from: "browser",
+        })
+      );
     } else {
       alert("Geolocation not supported");
     }
+  };
+
+  const addBookmark = (id: number) => {
+    alert(id)
+    dispatch(toggleBookmark(id));
   };
 
   return (
@@ -145,8 +162,16 @@ export default function AgentProfileCard({ agent }: AgentProps) {
 
         {/* RIGHT CONTACT CARD */}
         <div className="contact-card">
-          <a href={`tel:${agent.phone}`} className="btn primary">
-            <Phone size={16} />
+          <a href={`tel:${agent.phone}`} className="btn primary" onClick={() => {
+              dispatch(
+                sendAgentInteraction({
+                  agentId: agent.id,
+                  click_type: "call",
+                  clicked_from: "browser",
+                })
+              );
+            }}>
+            <Phone size={16}  />
             Call Agent
           </a>
 
@@ -154,8 +179,17 @@ export default function AgentProfileCard({ agent }: AgentProps) {
             href={`https://wa.me/${agent.whatsapp_number}`}
             target="_blank"
             className="btn whatsapp"
+             onClick={() => {
+              dispatch(
+                sendAgentInteraction({
+                  agentId: agent.id,
+                  click_type: "whatsapp",
+                  clicked_from: "browser",
+                })
+              );
+            }}
           >
-            <MessageCircle size={16} />
+            <MessageCircle size={16}  />
             WhatsApp
           </a>
           <button
@@ -167,7 +201,7 @@ export default function AgentProfileCard({ agent }: AgentProps) {
           </button>
 
           <div className="icon-row">
-            <Bookmark size={20} />
+            <Bookmark size={20} onClick={() => addBookmark(agent.id)} />
             <Share2 size={20} onClick={handleShare} />
           </div>
         </div>
