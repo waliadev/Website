@@ -35,7 +35,7 @@ useEffect(() => {
   if (!token || !profile?.id) return;
 
   // agar same user already check ho chuka hai → skip
-  if (checkedUserId === profile.id) return;
+  if (checkedUserId === Number(profile.id)) return;
 
   const cleanEmail = profile.email?.replace(/"/g, "").trim();
 
