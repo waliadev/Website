@@ -25,12 +25,7 @@ interface Agent {
   image_urls: string[];
 }
 
-interface BookmarkItem {
-  id: number;
-  agent: {
-    id: number;
-  };
-}
+
 
 export default function AgentCard({ agent }: { agent: Agent }) {
   const dispatch = useAppDispatch();
@@ -48,18 +43,18 @@ export default function AgentCard({ agent }: { agent: Agent }) {
   const { bookmarksData, loading } = useAppSelector(
     (state) => state.bookmark
   );
-  const { bookmarks } = useAppSelector((state) => state.bookmark);
+
+  console.log("Bookam", bookmarksData)
+  // const { bookmarks } = useAppSelector((state) => state.bookmark);
 
 const isSaved = bookmarksData.some(
-  (item) => item.agent?.id === agent.agent_id
-) || bookmarks.includes(agent.agent_id);
-  console.log("Is Saved",isSaved)
+  (item) => (item.agent_id ?? item.agent_id) === (agent.agent_id ?? agent.agent_id)
+);
+console.log("Is Saved", isSaved);
 
   const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    dispatch(toggleBookmark(agent.agent_id));
-    dispatch(fetchBookmarks())
-     
+    dispatch(toggleBookmark(agent.agent_id));     
   };
 
   const handleCall = (e: React.MouseEvent<HTMLButtonElement>) => {

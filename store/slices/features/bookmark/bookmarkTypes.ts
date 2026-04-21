@@ -7,8 +7,10 @@ export interface BookmarkResponse {
   message: string;
 }
 
+
 export interface BookmarkAgent {
-  agent_id: number;
+  agent_id: number;      // optional (UI se aata hai)
+
 }
 
 export interface BookmarkState {

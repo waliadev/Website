@@ -92,7 +92,12 @@ const bookmarkSlice = createSlice({
       })
       .addCase(fetchBookmarks.fulfilled, (state, action) => {
         state.loading = false;
-        state.bookmarksData = action.payload;
+        console.log("action", action.payload)
+        state.bookmarksData = action.payload.map((item: any) => ({
+          ...item,
+          agent_id: item.agent.id, // 👈 yahan convert kar diya
+        }));
+        console.log("hdf", action.payload)
         state.bookmarks = action.payload.map(
           (item) => item.agent_id
         );
@@ -100,6 +105,31 @@ const bookmarkSlice = createSlice({
       .addCase(fetchBookmarks.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error";
+      })
+
+      .addCase(toggleBookmark.fulfilled, (state, action) => {
+        const id = action.payload;
+
+        const exists = state.bookmarks.includes(id);
+
+        if (exists) {
+          // ensure present
+          if (!state.bookmarksData.some(item => item.agent_id === id)) {
+            state.bookmarksData.push({
+              agent_id: id,
+              name: "",
+              agency_name: "",
+              rating: "",
+              address: "",
+              image_urls: [],
+            });
+          }
+        } else {
+          // ensure removed
+          state.bookmarksData = state.bookmarksData.filter(
+            (item) => item.agent_id !== id
+          );
+        }
       })
 
       /* TOGGLE (OPTIMISTIC) */

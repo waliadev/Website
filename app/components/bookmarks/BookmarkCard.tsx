@@ -68,7 +68,7 @@ export default function BookmarkCard({ agent, office }: any) {
       {/* IMAGE */}
       <div className={styles.imageWrapper}>
         <img
-          src={agent.images?.[0] || "/house.jpg"}
+          src={agent.images?.[0]}
           alt="agent"
           className={styles.image}
         />
