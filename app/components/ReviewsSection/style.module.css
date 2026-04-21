@@ -3,6 +3,21 @@
   padding: 40px 20px;
 }
 
+
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: #ff5a00;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
 .reviewInner {
   width: 100%;
   max-width: 1100px;

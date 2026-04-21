@@ -52,14 +52,28 @@ export default function ExpertHelpModal({
     useState<number | null>(null);
 
   /* ================= EFFECT ================= */
+useEffect(() => {
+  if (openModal) {
+    dispatch(fetchCities());
 
-  useEffect(() => {
-    if (openModal) {
-      dispatch(fetchCities());
-    } else {
-      dispatch(resetAllLocationData());
-    }
-  }, [openModal, dispatch]);
+    // ✅ correct setters
+    setSelectedCityId(null);
+    setSelectedAreaId(null);
+    setSelectedLocalityId(null);
+
+    // optional: form bhi reset karo
+    setFormData({
+      you_want_to: "",
+      property_type: "",
+      residential_type: "",
+      location_id: "",
+      your_requirements: "",
+    });
+
+  } else {
+    dispatch(resetAllLocationData());
+  }
+}, [openModal, dispatch]);
 
   /* ================= COMMON CHANGE ================= */
 
@@ -121,17 +135,17 @@ export default function ExpertHelpModal({
 
 const handleSubmit = () => {
   const payload = {
-    purpose: formData.you_want_to,
-    propertyType: formData.property_type,
-    propertySize: formData.residential_type,
+    you_want_to: formData.you_want_to,
+    property_type : formData.property_type,
+    residential_type: formData.residential_type,
 
     // ✅ IMPORTANT FIX
     city: selectedCityId,
     area: selectedAreaId,
-    locality: selectedLocalityId,
+    location_id: selectedLocalityId,
 
     // ✅ name भी change
-    requirement: formData.your_requirements,
+    your_requirements: formData.your_requirements,
   };
 
   console.log("Final API Data:", payload);

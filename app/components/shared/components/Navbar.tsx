@@ -16,10 +16,12 @@ export default function Navbar() {
   const dispatch = useAppDispatch();
 
   const [open, setOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false); // ✅ ADD
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [checkedUserId, setCheckedUserId] = useState<number | null>(null); // ✅ ADD
 
   const token = Cookies.get("token");
   const { profile } = useAppSelector((state) => state.profile);
+  console.log("profile is navbar",profile)
 
   const menuRef = useRef<HTMLDivElement>(null);
   useOutsideClick(menuRef, () => setOpen(false));
@@ -28,6 +30,23 @@ export default function Navbar() {
     if (!token) return;
     dispatch(getProfile());
   }, [token, dispatch]);
+
+useEffect(() => {
+  if (!token || !profile?.id) return;
+
+  // agar same user already check ho chuka hai → skip
+  if (checkedUserId === profile.id) return;
+
+  const cleanEmail = profile.email?.replace(/"/g, "").trim();
+
+  if (!profile.name || !cleanEmail) {
+    setProfileOpen(true);
+  } else {
+    setProfileOpen(false); // 🔥 important (close if complete)
+  }
+
+  setCheckedUserId(+profile.id); // mark as checked
+}, [profile, token, checkedUserId]);
 
   const handleLogout = () => {
     Cookies.remove("token", { path: "/" });

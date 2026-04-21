@@ -38,8 +38,8 @@ export const updateProfile = createAsyncThunk<
   try {
     const token = getToken(); // ✅ now works
 
-    const response = await api.put(
-      "/auth/users/update/profile",
+    const response = await api.patch(
+      "/auth/users/profile",
       data,
       {
         headers: {

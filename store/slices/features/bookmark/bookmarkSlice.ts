@@ -25,15 +25,21 @@ const initialState: BookmarkState = {
   bookmarksData: [],
 };
 
-/* ================= FETCH ================= */
+/* ===== FETCH ===== */
 
 export const fetchBookmarks = createAsyncThunk<
   Agent[],
-  number | undefined,
+  void,
   { rejectValue: string }
->("bookmark/fetchBookmarks", async (agent_id, { rejectWithValue }) => {
+>("bookmark/fetchBookmarks", async (_, { rejectWithValue }) => {
   try {
-    const response = await api.get("/auth/users/bookmark");
+    const token = getToken();
+
+    const response = await api.get("/auth/users/bookmark", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     return response.data.data;
   } catch (error: any) {
@@ -43,7 +49,7 @@ export const fetchBookmarks = createAsyncThunk<
   }
 });
 
-/* ================= TOGGLE ================= */
+/* ===== TOGGLE ===== */
 
 export const toggleBookmark = createAsyncThunk<
   number,
@@ -66,12 +72,12 @@ export const toggleBookmark = createAsyncThunk<
     return agent_id;
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || "Bookmark failed"
+      error.response?.data?.message || "Toggle failed"
     );
   }
 });
 
-/* ================= SLICE ================= */
+/* ===== SLICE ===== */
 
 const bookmarkSlice = createSlice({
   name: "bookmark",
@@ -79,24 +85,49 @@ const bookmarkSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
+      /* FETCH */
+      .addCase(fetchBookmarks.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchBookmarks.fulfilled, (state, action) => {
-        console.log("fetched bookmarks:",action.payload)
+        state.loading = false;
         state.bookmarksData = action.payload;
         state.bookmarks = action.payload.map(
           (item) => item.agent_id
         );
       })
+      .addCase(fetchBookmarks.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error";
+      })
 
-      .addCase(toggleBookmark.fulfilled, (state, action) => {
-        const id = action.payload;
+      /* TOGGLE (OPTIMISTIC) */
+      .addCase(toggleBookmark.pending, (state, action) => {
+        const id = action.meta.arg;
 
-        state.bookmarks = state.bookmarks.filter(
-          (item) => item !== id
-        );
+        if (state.bookmarks.includes(id)) {
+          state.bookmarks = state.bookmarks.filter(
+            (item) => item !== id
+          );
+        } else {
+          state.bookmarks.push(id);
+        }
+      })
 
-        state.bookmarksData = state.bookmarksData.filter(
-          (item) => item.agent_id !== id
-        );
+      .addCase(toggleBookmark.rejected, (state, action) => {
+        const id = action.meta.arg;
+
+        // rollback
+        if (state.bookmarks.includes(id)) {
+          state.bookmarks = state.bookmarks.filter(
+            (item) => item !== id
+          );
+        } else {
+          state.bookmarks.push(id);
+        }
+
+        state.error = action.payload || "Toggle failed";
       });
   },
 });

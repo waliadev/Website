@@ -5,8 +5,8 @@ import styles from "./ProfileModal.module.css";
 import { useAppSelector } from "@/store/hooks";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { updateProfile } from "@/store/slices/features/profile/profileSlice";
-import { showToast } from "@/utils/toast"
+import { getProfile, updateProfile } from "@/store/slices/features/profile/profileSlice";
+import { showToast } from "@/utils/toast";
 
 interface Props {
   open: boolean;
@@ -33,24 +33,39 @@ export default function ProfileModal({ open, onClose }: Props) {
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // ✅ Clean email + check profile
+  const cleanEmail = profile?.email?.replace(/"/g, "").trim();
+  const isProfileComplete = !!(profile?.name && cleanEmail);
+
   // ✅ Auto fill profile
   useEffect(() => {
     if (profile) {
       setForm({
         name: profile.name || "",
         phone: profile.phone || "",
-        email: profile.email || "",
+        email: cleanEmail || "",
       });
     }
   }, [profile]);
 
-  // ✅ SAVE FUNCTION
+  // ✅ ESC close control
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isProfileComplete) {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, [isProfileComplete, onClose]);
+
+  // ✅ SAVE
   const handleSave = async () => {
     try {
       setLoading(true);
 
       const formData = new FormData();
-
       formData.append("name", form.name);
       formData.append("email", form.email);
       formData.append("phone", form.phone);
@@ -72,23 +87,26 @@ export default function ProfileModal({ open, onClose }: Props) {
       }
 
       await dispatch(updateProfile(formData)).unwrap();
+      dispatch(getProfile())
 
-      showToast("Profile Uodate Successful","success")
+      showToast(
+        isProfileComplete
+          ? "Profile updated successfully"
+          : "Signup successful",
+        "success"
+      );
+
       onClose();
     } catch (err) {
-      console.error(err);
       showToast("Update failed ❌", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Get Current Location
+  // ✅ Location
   const getCurrentLocation = () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation not supported");
-      return;
-    }
+    if (!navigator.geolocation) return;
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -97,50 +115,60 @@ export default function ProfileModal({ open, onClose }: Props) {
           lng: pos.coords.longitude,
         });
       },
-      () => {
-        alert("Unable to fetch location");
-      }
+      () => alert("Unable to fetch location")
     );
   };
 
   if (!open) return null;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.modal}>
-        
+    <div
+      className={styles.overlay}
+      onClick={() => {
+        if (isProfileComplete) onClose();
+      }}
+    >
+      <div
+        className={styles.modal}
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* HEADER */}
         <div className={styles.header}>
-          <h3>Edit Profile</h3>
-          <button onClick={onClose} className={styles.closeBtn}>
-            ✕
-          </button>
+          <h3>
+            {isProfileComplete
+              ? "Edit Profile"
+              : "Create Your Account"}
+          </h3>
+
+          {/* ✅ Close only if complete */}
+          {isProfileComplete && (
+            <button onClick={onClose} className={styles.closeBtn}>
+              ✕
+            </button>
+          )}
         </div>
 
-        {/* 🔥 CLICKABLE TABS */}
+        {/* TABS */}
         <div
           style={{
             display: "flex",
             justifyContent: "center",
             gap: "30px",
             marginBottom: "15px",
-            cursor: "pointer",
             fontWeight: "600",
           }}
         >
-          {/* PROFILE TAB */}
           <span
             onClick={() => setStep(1)}
             style={{
               color: step === 1 ? "#ff5a00" : "gray",
-              borderBottom: step === 1 ? "2px solid #ff5a00" : "none",
-              paddingBottom: "4px",
+              borderBottom:
+                step === 1 ? "2px solid #ff5a00" : "none",
             }}
           >
             Profile
           </span>
 
-          {/* LOCATION TAB */}
           <span
             onClick={() => {
               if (!form.name || !form.email) {
@@ -151,15 +179,15 @@ export default function ProfileModal({ open, onClose }: Props) {
             }}
             style={{
               color: step === 2 ? "#ff5a00" : "gray",
-              borderBottom: step === 2 ? "2px solid #ff5a00" : "none",
-              paddingBottom: "4px",
+              borderBottom:
+                step === 2 ? "2px solid #ff5a00" : "none",
             }}
           >
             Location
           </span>
         </div>
 
-        {/* STEP 1: PROFILE */}
+        {/* STEP 1 */}
         {step === 1 && (
           <>
             <div className={styles.avatar}>
@@ -169,11 +197,9 @@ export default function ProfileModal({ open, onClose }: Props) {
             <input
               type="file"
               accept="image/*"
-              onChange={(e) => {
-                if (e.target.files?.[0]) {
-                  setImage(e.target.files[0]);
-                }
-              }}
+              onChange={(e) =>
+                setImage(e.target.files?.[0] || null)
+              }
             />
 
             <div className={styles.form}>
@@ -203,6 +229,13 @@ export default function ProfileModal({ open, onClose }: Props) {
             </div>
 
             <button
+              onClick={() => {
+                if (!form.name || !form.email) {
+                  alert("Please fill required fields");
+                  return;
+                }
+                setStep(2);
+              }}
               style={{
                 background: "#ff5a00",
                 color: "#fff",
@@ -211,15 +244,7 @@ export default function ProfileModal({ open, onClose }: Props) {
                 border: "none",
                 width: "100%",
                 marginTop: "10px",
-                cursor: "pointer",
                 fontWeight: "600",
-              }}
-              onClick={() => {
-                if (!form.name || !form.email) {
-                  alert("Please fill required fields");
-                  return;
-                }
-                setStep(2);
               }}
             >
               Next ➡️
@@ -227,10 +252,11 @@ export default function ProfileModal({ open, onClose }: Props) {
           </>
         )}
 
-        {/* STEP 2: LOCATION */}
+        {/* STEP 2 */}
         {step === 2 && (
           <>
             <button
+              onClick={getCurrentLocation}
               style={{
                 background: "#ff5a00",
                 color: "#fff",
@@ -238,46 +264,45 @@ export default function ProfileModal({ open, onClose }: Props) {
                 borderRadius: "8px",
                 border: "none",
                 width: "100%",
-                cursor: "pointer",
                 fontWeight: "600",
               }}
-              onClick={getCurrentLocation}
             >
               📍 Use Current Location
             </button>
 
-            <div className={styles.map}>
-              <iframe
-                width="100%"
-                height="200"
-                style={{ border: 0, borderRadius: "10px", marginTop: "10px" }}
-                loading="lazy"
-                src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`}
-              />
-            </div>
+            <iframe
+              width="100%"
+              height="200"
+              style={{
+                border: 0,
+                borderRadius: "10px",
+                marginTop: "10px",
+              }}
+              src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`}
+            />
 
-            
-              
-
-              {/* SAVE */}
-              <button
-                onClick={handleSave}
-                disabled={loading}
-                style={{
-                  background: "#ff5a00",
-                  color: "#fff",
-                  padding: "10px 20px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                }}
-              >
-                {loading ? "Submitting..." : "Submit"}
-              </button>
+            <button
+              onClick={handleSave}
+              disabled={loading}
+              style={{
+                background: "#ff5a00",
+                color: "#fff",
+                padding: "10px",
+                borderRadius: "8px",
+                border: "none",
+                width: "100%",
+                marginTop: "10px",
+                fontWeight: "600",
+              }}
+            >
+              {loading
+                ? "Submitting..."
+                : isProfileComplete
+                ? "Update Profile"
+                : "Sign Up"}
+            </button>
           </>
         )}
-
       </div>
     </div>
   );

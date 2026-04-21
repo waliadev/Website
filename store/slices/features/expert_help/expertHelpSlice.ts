@@ -5,16 +5,16 @@ import { getToken } from "@/utils/token";
 /* ================= TYPES ================= */
 
 export interface ExpertHelpPayload {
-  purpose: string;
-  propertyType: string;
-  propertySize: string;
+  you_want_to: string;
+  property_type : string;
+  residential_type: string;
 
   // ✅ FIX: number type (IDs हैं)
   city: number | null;
   area: number | null;
-  locality: number | null;
+  location_id: number | null;
 
-  requirement: string;
+  your_requirements: string;
 }
 
 interface ExpertHelpState {

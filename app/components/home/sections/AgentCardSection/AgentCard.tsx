@@ -2,7 +2,7 @@
 
 import styles from "@/app/components/home/styles/AgentCards.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
+import { fetchBookmarks, toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
 import { useRouter } from "next/navigation";
 import { handleProtectedInteraction } from "@/utils/authGuard";
 import { getToken } from "@/utils/token";
@@ -11,6 +11,8 @@ import AgentImageSlider from "@/app/components/home/sections/AgentCardSection/Ag
 import AgentContent from "@/app/components/home/sections/AgentCardSection/AgentContent";
 import { createSlug } from "@/utils/createSlug";
 import { useEffect, useState } from "react";
+import { showToast } from "@/utils/toast";
+
 
 interface Agent {
   agent_id: number;
@@ -21,6 +23,13 @@ interface Agent {
   whatsapp_number: string;
   phone: string;
   image_urls: string[];
+}
+
+interface BookmarkItem {
+  id: number;
+  agent: {
+    id: number;
+  };
 }
 
 export default function AgentCard({ agent }: { agent: Agent }) {
@@ -35,15 +44,22 @@ export default function AgentCard({ agent }: { agent: Agent }) {
     const t = getToken();
     setToken(t);
   }, []);
-
-
-  console.log("tken in card", token)
-
+  
+  const { bookmarksData, loading } = useAppSelector(
+    (state) => state.bookmark
+  );
   const { bookmarks } = useAppSelector((state) => state.bookmark);
-  const isSaved = bookmarks.includes(agent.agent_id);
 
-  const handleBookmark = () => {
+const isSaved = bookmarksData.some(
+  (item) => item.agent?.id === agent.agent_id
+) || bookmarks.includes(agent.agent_id);
+  console.log("Is Saved",isSaved)
+
+  const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
     dispatch(toggleBookmark(agent.agent_id));
+    dispatch(fetchBookmarks())
+     
   };
 
   const handleCall = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -78,6 +94,11 @@ const handleAgentDetails = (agentId: number, agentName: string): void => {
   console.log(`/agent/${slug}-${agentId}${Date.now()}`);
   router.push(`/agent/${slug}-${agentId}${Date.now()}`);
 };
+
+
+  useEffect(() => {
+    dispatch(fetchBookmarks());
+  }, []);
 
   return (
     <div

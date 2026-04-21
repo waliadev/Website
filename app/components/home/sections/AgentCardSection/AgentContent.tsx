@@ -46,9 +46,9 @@ export default function AgentContent({
             }`}
           >
             {isSaved ? (
-              <BsBookmarkFill size={18} />
+              <BsBookmarkFill size={18}  color="#ff9800"/>
             ) : (
-              <BsBookmark size={18} />
+              <BsBookmark size={18}  color="#aaa"/>
             )}
           </button>
         )}

@@ -63,6 +63,18 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
     setStep(1);
   };
 
+  const getInitials = (name = "") => {
+  const words = name.trim().split(" ");
+
+  if (words.length === 1) {
+    return words[0].charAt(0).toUpperCase();
+  }
+
+  return (
+    words[0].charAt(0) + words[1].charAt(0)
+  ).toUpperCase();
+};
+
   return (
     <section className={styles.reviewSection}>
       <div className={styles.reviewInner}>
@@ -202,10 +214,9 @@ export default function ReviewsSection({ agentId }: { agentId: number }) {
             <div key={r.id || i} className={styles.reviewItem}>
               <div className={styles.reviewHeader}>
                 <div className={styles.userInfo}>
-                  <img
-                    src={`https://i.pravatar.cc/40?img=${i + 1}`}
-                    className={styles.avatar}
-                  />
+                  <div className={styles.avatar}>
+                      {getInitials(r.user_name || "Anonymous")}
+                  </div>
 
                   <div>
                     <h4>{r.user_name || "Anonymous"}</h4>

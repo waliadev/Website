@@ -151,15 +151,14 @@
 }
 
 .saveBtn {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: #facc15;
+  background: transparent;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
+  color: #aaa; /* default color */
+}
+
+.activeSave {
+  color: #ff9800; /* bookmark hone par color change */
 }
 
 
@@ -185,7 +184,6 @@
 
 /* Active Save Button */
 .activeSave {
-  background: linear-gradient(135deg, #facc15, #eab308);
   animation: pop 0.3s ease;
 }
 
