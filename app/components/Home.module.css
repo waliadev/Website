@@ -708,14 +708,14 @@
   background: white;
   border-radius: 60px;
   padding: 10px;
-  border: 2px solid #facc15;
+  border: 2px solid #FF6700;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .searchIconBox {
   width: 44px;
   height: 44px;
-  background: #facc15;
+  background: #FF6700;
   border-radius: 50%;
   display: flex;
   align-items: center;

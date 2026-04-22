@@ -137,7 +137,7 @@ export default function AgentCard({ agent }: any) {
     e.stopPropagation();
 
     const slug = createSlug(agent.agency_name || agent.name);
-    const url = `${window.location.origin}/agent/${slug}-${agent.agent_id}`;
+    const url = `${window.location.origin}/agent/${slug}-${agent.agent_id}${Date.now()}`;
 
     if (navigator.share) {
       navigator.share({
@@ -153,7 +153,7 @@ export default function AgentCard({ agent }: any) {
 
   const handleDetails = () => {
     const slug = createSlug(agent.agency_name || agent.name);
-    router.push(`/agent/${slug}-${agent.agent_id}`);
+    router.push(`/agent/${slug}-${agent.agent_id}${Date.now()}`);
   };
 
   // ================= UI =================

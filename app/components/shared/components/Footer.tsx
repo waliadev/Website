@@ -74,7 +74,7 @@ export default function Footer() {
         <div>
           <h4>Contact</h4>
           <p>📧 {FOOTER.CONTACT.EMAIL}</p>
-          <p>📞 {FOOTER.CONTACT.PHONE}</p>
+          {/* <p>📞 {FOOTER.CONTACT.PHONE}</p> */}
         </div>
 
       </div>

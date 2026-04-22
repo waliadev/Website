@@ -26,7 +26,7 @@ export const EXPERT_HERO = {
   ],
 
   buttons: {
-    primary: "Talk to Expert",
+    primary: "Get Expert Help",
     secondary: "Live Chat",
   },
 

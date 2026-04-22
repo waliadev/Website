@@ -5,7 +5,7 @@ import styles from "@/app/components/expertHelp/styles/ExpertHero.module.css";
 import { Phone, MessageCircle } from "lucide-react";
 import { EXPERT_HERO } from "@/constants/expertHelp";
 
-export default function ExpertHero() {
+export default function ExpertHero({setOpenModal}) {
   return (
     <section className={styles.hero}>
       {/* LEFT */}
@@ -33,15 +33,15 @@ export default function ExpertHero() {
 
         {/* BUTTONS */}
         <div className={styles.actions}>
-          <button className={styles.primaryBtn}>
+          <button className={styles.primaryBtn} onClick={()=>{setOpenModal(true)}}>
             <Phone size={18} />
             {EXPERT_HERO.buttons.primary}
           </button>
 
-          <button className={styles.secondaryBtn}>
+          {/* <button className={styles.secondaryBtn}>
             <MessageCircle size={18} />
             {EXPERT_HERO.buttons.secondary}
-          </button>
+          </button> */}
         </div>
       </div>
 

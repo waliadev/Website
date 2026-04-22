@@ -14,8 +14,7 @@ export const FOOTER = {
   },
 
   CONTACT: {
-    EMAIL: "support@brokerdash.com",
-    PHONE: "+91 8178197411",
+    EMAIL: "support@brokerdash.in",
   },
 
   COPYRIGHT: "Hyperstream Pvt. Ltd. | All Rights Reserved",
