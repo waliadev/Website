@@ -22,7 +22,7 @@ export default function CitySection({
 }: any) {
   return (
     <div className={styles.citySection}>
-      <h3 className={styles.sectionTitle}>Explore by City</h3>
+      <h3 className={styles.sectionTitle}>Select a City</h3>
 
       <div className={styles.cityGrid}>
         {cities?.map((city: any) => {

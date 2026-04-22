@@ -38,9 +38,16 @@ export default function ProfileModal({ open, onClose }: Props) {
   });
 
   const [loading, setLoading] = useState(false);
+
   const cleanEmail = profile?.email?.replace(/"/g, "").trim();
   const isProfileComplete = !!(profile?.name && cleanEmail);
 
+  /* =========================
+     ✅ VALIDATION
+  ========================== */
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  const isStep1Valid =
+    form.name.trim() !== "" && isEmailValid;
 
   /* =========================
      REVERSE GEOCODING
@@ -69,7 +76,7 @@ export default function ProfileModal({ open, onClose }: Props) {
   };
 
   /* =========================
-     GET CURRENT LOCATION (FIXED)
+     GET CURRENT LOCATION
   ========================== */
   const getCurrentLocation = () => {
     navigator.geolocation.getCurrentPosition(
@@ -91,59 +98,53 @@ export default function ProfileModal({ open, onClose }: Props) {
       () => alert("Location permission denied")
     );
   };
-const cleanValue = (value: any): string => {
-  if (!value) return "";
 
-  try {
-    let result = value;
+  /* =========================
+     CLEAN VALUE
+  ========================== */
+  const cleanValue = (value: any): string => {
+    if (!value) return "";
 
-    // 🔥 handle multiple stringify
-    while (typeof result === "string") {
-      const parsed = JSON.parse(result);
-      if (typeof parsed === "string") {
-        result = parsed;
-      } else {
-        break;
+    try {
+      let result = value;
+
+      while (typeof result === "string") {
+        const parsed = JSON.parse(result);
+        if (typeof parsed === "string") {
+          result = parsed;
+        } else {
+          break;
+        }
       }
+
+      return result.replace(/\\+/g, "").replace(/"/g, "").trim();
+    } catch {
+      return value.replace(/\\+/g, "").replace(/"/g, "").trim();
     }
-
-    // 🔥 remove unwanted slashes + quotes
-    return result.replace(/\\+/g, "").replace(/"/g, "").trim();
-  } catch {
-    return value.replace(/\\+/g, "").replace(/"/g, "").trim();
-  }
-};
-
+  };
 
   /* =========================
      AUTO FILL
   ========================== */
   useEffect(() => {
     if (profile) {
-      // ✅ form fill
-    setForm({
-  name: cleanValue(profile.name),
-  phone: cleanValue(profile.phone),
-  email: cleanValue(profile.email),
-});
+      setForm({
+        name: cleanValue(profile.name),
+        phone: cleanValue(profile.phone),
+        email: cleanValue(profile.email),
+      });
 
-      // ✅ location fill
       if (profile.location) {
         try {
           let parsedLocation = profile.location;
-          console.log("jdk", parsedLocation);
 
-          // 🔥 अगर string है तो parse करो
           if (typeof parsedLocation === "string") {
             parsedLocation = JSON.parse(parsedLocation);
 
-            // 🔥 double stringify case handle
             if (typeof parsedLocation === "string") {
               parsedLocation = JSON.parse(parsedLocation);
             }
           }
-
-          console.log("iam location", parsedLocation);
 
           setLocation({
             lat: parsedLocation?.lat || 0,
@@ -152,7 +153,7 @@ const cleanValue = (value: any): string => {
             city: parsedLocation?.city || "",
             state: parsedLocation?.state || "",
             pincode: parsedLocation?.pincode || "",
-          })
+          });
         } catch (error) {
           console.log("Location parse error:", error);
         }
@@ -226,7 +227,7 @@ const cleanValue = (value: any): string => {
         {step === 1 && (
           <div className={styles.form}>
             <div className={styles.inputGroup}>
-              <label>Full Name</label>
+              <label>Full Name *</label>
               <input
                 value={form.name}
                 onChange={(e) =>
@@ -246,7 +247,7 @@ const cleanValue = (value: any): string => {
             </div>
 
             <div className={styles.inputGroup}>
-              <label>Email</label>
+              <label>Email *</label>
               <input
                 value={form.email}
                 onChange={(e) =>
@@ -255,9 +256,21 @@ const cleanValue = (value: any): string => {
               />
             </div>
 
+            {/* ERROR MESSAGE */}
+            {!isStep1Valid && (
+              <p style={{ color: "red", fontSize: "12px" }}>
+                Please enter valid Name and Email
+              </p>
+            )}
+
             <button
               className={styles.saveBtn}
               onClick={() => setStep(2)}
+              disabled={!isStep1Valid}
+              style={{
+                opacity: !isStep1Valid ? 0.5 : 1,
+                cursor: !isStep1Valid ? "not-allowed" : "pointer",
+              }}
             >
               Next →
             </button>
@@ -274,7 +287,6 @@ const cleanValue = (value: any): string => {
               📍 Use Current Location
             </button>
 
-
             <div className={styles.map}>
               <iframe
                 src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`}
@@ -289,9 +301,8 @@ const cleanValue = (value: any): string => {
               {loading
                 ? "Saving..."
                 : isProfileComplete
-                  ? "Update Profile"
-                  : "Sign Up"}
-
+                ? "Update Profile"
+                : "Sign Up"}
             </button>
           </>
         )}

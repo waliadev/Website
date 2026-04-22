@@ -1,121 +1,241 @@
 "use client";
 
-import styles from "@/app/components/home/styles/AgentCards.module.css";
+import styles from "./AgentCards.module.css";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { fetchBookmarks, toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
+import {
+  toggleBookmark,
+  fetchBookmarks,
+} from "@/store/slices/features/bookmark/bookmarkSlice";
 import { useRouter } from "next/navigation";
-import { handleProtectedInteraction } from "@/utils/authGuard";
-import { getToken } from "@/utils/token";
-
-import AgentImageSlider from "@/app/components/home/sections/AgentCardSection/AgentImageSlider";
-import AgentContent from "@/app/components/home/sections/AgentCardSection/AgentContent";
+import { useEffect, useMemo, useState } from "react";
+import { FiPhone, FiShare2 } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { MapPin } from "lucide-react";
 import { createSlug } from "@/utils/createSlug";
-import { useEffect, useState } from "react";
-import { showToast } from "@/utils/toast";
+import { getToken } from "@/utils/token";
+import { handleProtectedAction } from "@/utils/protectedAction";
 
-
-interface Agent {
-  agent_id: number;
-  name: string;
-  agency_name: string;
-  rating: string | null;
-  address: string;
-  whatsapp_number: string;
-  phone: string;
-  image_urls: string[];
-}
-
-
-
-export default function AgentCard({ agent }: { agent: Agent }) {
+export default function AgentCard({ agent }: any) {
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [token, setToken] = useState<string | null>(null);
+  const [index, setIndex] = useState(0);
+  const [distance, setDistance] = useState<number | null>(null);
 
+  // ================= IMAGE =================
+  const imageList = useMemo(() => {
+    return agent.image_urls?.length > 0
+      ? agent.image_urls
+      : ["https://via.placeholder.com/400x300"];
+  }, [agent.image_urls]);
 
-
+  // ================= INIT =================
   useEffect(() => {
-    const t = getToken();
-    setToken(t);
-  }, []);
-  
-  const { bookmarksData, loading } = useAppSelector(
-    (state) => state.bookmark
-  );
+    setToken(getToken());
+    dispatch(fetchBookmarks());
+  }, [dispatch]);
 
-  console.log("Bookam", bookmarksData)
-  // const { bookmarks } = useAppSelector((state) => state.bookmark);
+  // ================= SLIDER =================
+  useEffect(() => {
+    if (imageList.length <= 1) return;
 
-const isSaved = bookmarksData.some(
-  (item) => (item.agent_id ?? item.agent_id) === (agent.agent_id ?? agent.agent_id)
-);
-console.log("Is Saved", isSaved);
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % imageList.length);
+    }, 3000);
 
-  const handleBookmark = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-    dispatch(toggleBookmark(agent.agent_id));     
+    return () => clearInterval(interval);
+  }, [imageList]);
+
+  // ================= DISTANCE =================
+  const getDistance = (
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ) => {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) ** 2;
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
   };
 
-  const handleCall = (e: React.MouseEvent<HTMLButtonElement>) => {
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const userLat = pos.coords.latitude;
+      const userLon = pos.coords.longitude;
+
+      const agentLat = parseFloat(agent.latitude);
+      const agentLon = parseFloat(agent.longitude);
+
+      if (agentLat && agentLon) {
+        const dist = getDistance(userLat, userLon, agentLat, agentLon);
+        setDistance(dist);
+      }
+    });
+  }, [agent.latitude, agent.longitude]);
+
+  const { bookmarksData } = useAppSelector((state) => state.bookmark);
+
+  const isSaved = bookmarksData.some(
+    (item: any) => item.agent_id === agent.agent_id
+  );
+
+  // ================= ACTIONS =================
+
+  const handleBookmark = (e: any) => {
     e.stopPropagation();
-    handleProtectedInteraction(dispatch, router, agent.agent_id, "call", () => {
+    handleProtectedAction(router, () => {
+      dispatch(toggleBookmark(agent.agent_id));
+    });
+  };
+
+  const handleCall = (e: any) => {
+    e.stopPropagation();
+    handleProtectedAction(router, () => {
       window.location.href = `tel:${agent.phone}`;
     });
   };
 
-  const handleWhatsApp = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleWhatsApp = (e: any) => {
     e.stopPropagation();
-    handleProtectedInteraction(
-      dispatch,
-      router,
-      agent.agent_id,
-      "whatsapp",
-      () => {
-        window.open(`https://wa.me/${agent.whatsapp_number}`, "_blank");
-      }
-    );
+    handleProtectedAction(router, () => {
+      window.open(`https://wa.me/${agent.whatsapp_number}`, "_blank");
+    });
   };
-const handleAgentDetails = (agentId: number, agentName: string): void => {
-  if (!agentId) return;
 
-  const freshToken = getToken(); // 🔥 direct cookie se
+  const handleMap = (e: any) => {
+    e.stopPropagation();
 
-  if (!freshToken) {
-    router.push("/auth/sign-in");
-    return;
-  }
-  const slug = createSlug(agentName);
-  console.log(`/agent/${slug}-${agentId}${Date.now()}`);
-  router.push(`/agent/${slug}-${agentId}${Date.now()}`);
-};
+    handleProtectedAction(router, () => {
+      if (!navigator.geolocation) return;
 
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const userLat = pos.coords.latitude;
+        const userLon = pos.coords.longitude;
 
-  useEffect(() => {
-    dispatch(fetchBookmarks());
-  }, []);
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&origin=${userLat},${userLon}&destination=${agent.latitude},${agent.longitude}&travelmode=driving`,
+          "_blank"
+        );
+      });
+    });
+  };
+
+  const handleShare = (e: any) => {
+    e.stopPropagation();
+
+    const slug = createSlug(agent.agency_name || agent.name);
+    const url = `${window.location.origin}/agent/${slug}-${agent.agent_id}`;
+
+    if (navigator.share) {
+      navigator.share({
+        title: agent.agency_name,
+        text: `Check out ${agent.agency_name}`,
+        url,
+      });
+    } else {
+      navigator.clipboard.writeText(url);
+      alert("Link copied!");
+    }
+  };
+
+  const handleDetails = () => {
+    const slug = createSlug(agent.agency_name || agent.name);
+    router.push(`/agent/${slug}-${agent.agent_id}`);
+  };
+
+  // ================= UI =================
 
   return (
-    <div
-      className={`${styles.card} ${isSaved ? styles.bookmarkedCard : ""
-        }`}
-      onClick={() => handleAgentDetails(agent.agent_id, agent.agency_name)}
-    >
-      <AgentImageSlider
-        images={agent.image_urls}
-        name={agent.name}
-        rating={agent.rating}
-        isSaved={isSaved}
-      />
+    <div className={styles.card} onClick={handleDetails}>
+      
+      {/* IMAGE */}
+      <div className={styles.imageBox}>
+        <img src={imageList[index]} alt={agent.name} />
 
-      <AgentContent
-        agent={agent}
-        token={token}
-        isSaved={isSaved}
-        handleBookmark={handleBookmark}
-        handleCall={handleCall}
-        handleWhatsApp={handleWhatsApp}
-      />
+        {imageList.length > 1 && (
+          <div className={styles.dots}>
+            {imageList.map((_: any, i: number) => (
+              <span
+                key={i}
+                className={`${styles.dot} ${
+                  i === index ? styles.activeDot : ""
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* CONTENT */}
+      <div className={styles.content}>
+        
+        <div className={styles.top}>
+          <div>
+            <h3>{agent.agency_name}</h3>
+            <p className={styles.agentName}>👤 {agent.name}</p>
+          </div>
+
+          <div className={styles.rightTop}>
+            {agent.rating && (
+              <span className={styles.rating}>
+                {Number(agent.rating).toFixed(1)} ★
+              </span>
+            )}
+
+            <div className={styles.iconRow}>
+              <div className={styles.icon} onClick={handleMap}>
+                <MapPin size={18} />
+              </div>
+
+              <div className={styles.icon} onClick={handleBookmark}>
+                {isSaved ? <BsBookmarkFill size={18} /> : <BsBookmark size={18} />}
+              </div>
+
+              <div className={styles.icon} onClick={handleShare}>
+                <FiShare2 size={18} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.divider}></div>
+
+        <div className={styles.location}>
+          <MapPin size={16} />
+          <span>{agent.office_address}</span>
+
+          {distance && (
+            <span className={styles.distance}>
+              • {distance.toFixed(1)} km away
+            </span>
+          )}
+        </div>
+
+        {/* BUTTONS */}
+        <div className={styles.actionButtons}>
+          <button className={styles.callBtn} onClick={handleCall}>
+            <FiPhone size={18} /> Call
+          </button>
+
+          <button className={styles.whatsappBtn} onClick={handleWhatsApp}>
+            <FaWhatsapp size={18} /> WhatsApp
+          </button>
+        </div>
+
+      </div>
     </div>
   );
 }

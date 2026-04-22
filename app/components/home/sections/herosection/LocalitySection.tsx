@@ -11,7 +11,7 @@ export default function LocalitySection({
   return (
     <div className={styles.areaSection}>
       <h4 className={styles.sectionTitle}>
-        Popular Localities
+        Select a  Localities
       </h4>
 
       <div className={styles.chips}>

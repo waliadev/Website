@@ -11,7 +11,7 @@ export default function AreaSection({
   return (
     <div className={styles.areaSection}>
       <h4 className={styles.sectionTitle}>
-        Areas in {selectedCityName}
+        Select a Areas in {selectedCityName}
       </h4>
 
       <div className={styles.chips}>

@@ -23,8 +23,8 @@ export default function AgentCards() {
   return (
     <section className={styles.wrapper}>
       <h2 className={styles.title}>Top Property Agents</h2>
-
-      <div className={styles.grid}>
+       {/* className={styles.grid} */}
+      <div >
         {agents.map((agent: Agent) => (
           <AgentCard key={agent.agent_id} agent={agent} />
         ))}

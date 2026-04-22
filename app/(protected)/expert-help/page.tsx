@@ -48,7 +48,7 @@ export default function ExpertHelpPage() {
 
         <div className={styles.grid}>
 
-          <HelpCard
+          {/* <HelpCard
             icon={<Phone size={22} />}
             title="Call an Expert"
             desc="Speak directly with our property specialist."
@@ -62,7 +62,7 @@ export default function ExpertHelpPage() {
             desc="Chat instantly with our support team."
             action="Start Chat"
             onClick={handleWhatsapp}
-          />
+          /> */}
 
           <HelpCard
             icon={<LifeBuoy size={22} />}
