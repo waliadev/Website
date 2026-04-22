@@ -2,10 +2,17 @@
 
 import Image from "next/image";
 import styles from "@/app/components/expertHelp/styles/ExpertHero.module.css";
-import { Phone, MessageCircle } from "lucide-react";
+import { Phone } from "lucide-react";
 import { EXPERT_HERO } from "@/constants/expertHelp";
 
-export default function ExpertHero({setOpenModal}) {
+/* =========================
+   TYPES
+========================= */
+interface ExpertHeroProps {
+  setOpenModal: (value: boolean) => void;
+}
+
+export default function ExpertHero({ setOpenModal }: ExpertHeroProps) {
   return (
     <section className={styles.hero}>
       {/* LEFT */}
@@ -33,15 +40,14 @@ export default function ExpertHero({setOpenModal}) {
 
         {/* BUTTONS */}
         <div className={styles.actions}>
-          <button className={styles.primaryBtn} onClick={()=>{setOpenModal(true)}}>
+          <button
+            type="button"
+            className={styles.primaryBtn}
+            onClick={() => setOpenModal(true)}
+          >
             <Phone size={18} />
             {EXPERT_HERO.buttons.primary}
           </button>
-
-          {/* <button className={styles.secondaryBtn}>
-            <MessageCircle size={18} />
-            {EXPERT_HERO.buttons.secondary}
-          </button> */}
         </div>
       </div>
 
@@ -50,7 +56,7 @@ export default function ExpertHero({setOpenModal}) {
         <div className={styles.imageCard}>
           <Image
             src={EXPERT_HERO.image}
-            alt="expert help"
+            alt="Expert assistance"
             width={520}
             height={420}
             priority
