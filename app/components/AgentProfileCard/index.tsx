@@ -14,7 +14,7 @@ import {
 interface AgentProps {
   agent: any;
 }import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { toggleBookmark } from "@/store/slices/features/bookmark/bookmarkSlice";
+import { toggleBookmark,fetchBookmarks } from "@/store/slices/features/bookmark/bookmarkSlice";
 import { sendAgentInteraction } from "@/store/slices/features/interactions/interactionSlice";
 
 
@@ -23,6 +23,21 @@ export default function AgentProfileCard({ agent }: AgentProps) {
   const dispatch = useAppDispatch();
   const [activeImg, setActiveImg] = useState(0);
   const [distance, setDistance] = useState<string | null>(null);
+    const { bookmarksData, loading } = useAppSelector(
+    (state) => state.bookmark
+  );
+
+  const isBookmarked = bookmarksData.some(
+  (item) => (item.agent_id ?? item.agent_id) === (agent.id ?? agent.id)
+);
+
+console.log(isBookmarked,"isBookmarked")
+
+
+  useEffect(() => {
+    dispatch(fetchBookmarks());
+  }, [dispatch]);
+
 
 
   useEffect(() => {
@@ -108,7 +123,6 @@ export default function AgentProfileCard({ agent }: AgentProps) {
   };
 
   const addBookmark = (id: number) => {
-    alert(id)
     dispatch(toggleBookmark(id));
   };
 
@@ -201,7 +215,11 @@ export default function AgentProfileCard({ agent }: AgentProps) {
           </button>
 
           <div className="icon-row">
-            <Bookmark size={20} onClick={() => addBookmark(agent.id)} />
+            <Bookmark size={20} onClick={() => addBookmark(agent.id)}   
+            fill={isBookmarked ? "#ff9800" : "#aaa"}
+              color={isBookmarked ? "#ff9800" : "#aaa"}
+                style={{ cursor: "pointer" }}
+ />
             <Share2 size={20} onClick={handleShare} />
           </div>
         </div>

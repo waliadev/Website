@@ -5,7 +5,10 @@ import styles from "./ProfileModal.module.css";
 import { useAppSelector } from "@/store/hooks";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@/store";
-import { getProfile, updateProfile } from "@/store/slices/features/profile/profileSlice";
+import {
+  getProfile,
+  updateProfile,
+} from "@/store/slices/features/profile/profileSlice";
 import { showToast } from "@/utils/toast";
 
 interface Props {
@@ -28,39 +31,138 @@ export default function ProfileModal({ open, onClose }: Props) {
   const [location, setLocation] = useState({
     lat: 0,
     lng: 0,
+    address: "",
+    city: "",
+    state: "",
+    pincode: "",
   });
 
-  const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // ✅ Clean email + check profile
   const cleanEmail = profile?.email?.replace(/"/g, "").trim();
   const isProfileComplete = !!(profile?.name && cleanEmail);
 
-  // ✅ Auto fill profile
+
+  /* =========================
+     REVERSE GEOCODING
+  ========================== */
+  const getAddressFromLatLng = async (lat: number, lng: number) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`
+      );
+      const data = await res.json();
+
+      return {
+        address: data.display_name || "",
+        city:
+          data.address?.city ||
+          data.address?.town ||
+          data.address?.village ||
+          "",
+        state: data.address?.state || "",
+        pincode: data.address?.postcode || "",
+      };
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
+  };
+
+  /* =========================
+     GET CURRENT LOCATION (FIXED)
+  ========================== */
+  const getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+
+        const addressData = await getAddressFromLatLng(lat, lng);
+
+        setLocation({
+          lat,
+          lng,
+          address: addressData?.address || "Current Location",
+          city: addressData?.city || "",
+          state: addressData?.state || "",
+          pincode: addressData?.pincode || "",
+        });
+      },
+      () => alert("Location permission denied")
+    );
+  };
+const cleanValue = (value: any): string => {
+  if (!value) return "";
+
+  try {
+    let result = value;
+
+    // 🔥 handle multiple stringify
+    while (typeof result === "string") {
+      const parsed = JSON.parse(result);
+      if (typeof parsed === "string") {
+        result = parsed;
+      } else {
+        break;
+      }
+    }
+
+    // 🔥 remove unwanted slashes + quotes
+    return result.replace(/\\+/g, "").replace(/"/g, "").trim();
+  } catch {
+    return value.replace(/\\+/g, "").replace(/"/g, "").trim();
+  }
+};
+
+
+  /* =========================
+     AUTO FILL
+  ========================== */
   useEffect(() => {
     if (profile) {
-      setForm({
-        name: profile.name || "",
-        phone: profile.phone || "",
-        email: cleanEmail || "",
-      });
+      // ✅ form fill
+    setForm({
+  name: cleanValue(profile.name),
+  phone: cleanValue(profile.phone),
+  email: cleanValue(profile.email),
+});
+
+      // ✅ location fill
+      if (profile.location) {
+        try {
+          let parsedLocation = profile.location;
+          console.log("jdk", parsedLocation);
+
+          // 🔥 अगर string है तो parse करो
+          if (typeof parsedLocation === "string") {
+            parsedLocation = JSON.parse(parsedLocation);
+
+            // 🔥 double stringify case handle
+            if (typeof parsedLocation === "string") {
+              parsedLocation = JSON.parse(parsedLocation);
+            }
+          }
+
+          console.log("iam location", parsedLocation);
+
+          setLocation({
+            lat: parsedLocation?.lat || 0,
+            lng: parsedLocation?.lng || 0,
+            address: parsedLocation?.address || "",
+            city: parsedLocation?.city || "",
+            state: parsedLocation?.state || "",
+            pincode: parsedLocation?.pincode || "",
+          })
+        } catch (error) {
+          console.log("Location parse error:", error);
+        }
+      }
     }
   }, [profile]);
 
-  // ✅ ESC close control
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isProfileComplete) {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
-  }, [isProfileComplete, onClose]);
-
-  // ✅ SAVE
+  /* =========================
+     SAVE
+  ========================== */
   const handleSave = async () => {
     try {
       setLoading(true);
@@ -69,69 +171,25 @@ export default function ProfileModal({ open, onClose }: Props) {
       formData.append("name", form.name);
       formData.append("email", form.email);
       formData.append("phone", form.phone);
-
-      formData.append(
-        "location",
-        JSON.stringify({
-          address: "Current Location",
-          city: "Auto",
-          state: "Auto",
-          pincode: "000000",
-          lat: location.lat,
-          lng: location.lng,
-        })
-      );
-
-      if (image) {
-        formData.append("image", image);
-      }
+      formData.append("location", JSON.stringify(location));
 
       await dispatch(updateProfile(formData)).unwrap();
-      dispatch(getProfile())
+      dispatch(getProfile());
 
-      showToast(
-        isProfileComplete
-          ? "Profile updated successfully"
-          : "Signup successful",
-        "success"
-      );
-
+      showToast("Profile updated successfully", "success");
       onClose();
-    } catch (err) {
-      showToast("Update failed ❌", "error");
+    } catch {
+      showToast("Update failed", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Location
-  const getCurrentLocation = () => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocation({
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude,
-        });
-      },
-      () => alert("Unable to fetch location")
-    );
-  };
-
   if (!open) return null;
 
   return (
-    <div
-      className={styles.overlay}
-      onClick={() => {
-        if (isProfileComplete) onClose();
-      }}
-    >
-      <div
-        className={styles.modal}
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className={styles.overlay}>
+      <div className={styles.modal}>
         {/* HEADER */}
         <div className={styles.header}>
           <h3>
@@ -140,7 +198,6 @@ export default function ProfileModal({ open, onClose }: Props) {
               : "Create Your Account"}
           </h3>
 
-          {/* ✅ Close only if complete */}
           {isProfileComplete && (
             <button onClick={onClose} className={styles.closeBtn}>
               ✕
@@ -149,39 +206,17 @@ export default function ProfileModal({ open, onClose }: Props) {
         </div>
 
         {/* TABS */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "30px",
-            marginBottom: "15px",
-            fontWeight: "600",
-          }}
-        >
+        <div className={styles.tabs}>
           <span
+            className={step === 1 ? styles.active : ""}
             onClick={() => setStep(1)}
-            style={{
-              color: step === 1 ? "#ff5a00" : "gray",
-              borderBottom:
-                step === 1 ? "2px solid #ff5a00" : "none",
-            }}
           >
             Profile
           </span>
 
           <span
-            onClick={() => {
-              if (!form.name || !form.email) {
-                alert("Please fill profile first");
-                return;
-              }
-              setStep(2);
-            }}
-            style={{
-              color: step === 2 ? "#ff5a00" : "gray",
-              borderBottom:
-                step === 2 ? "2px solid #ff5a00" : "none",
-            }}
+            className={step === 2 ? styles.active : ""}
+            onClick={() => setStep(2)}
           >
             Location
           </span>
@@ -189,38 +224,30 @@ export default function ProfileModal({ open, onClose }: Props) {
 
         {/* STEP 1 */}
         {step === 1 && (
-          <>
-            <div className={styles.avatar}>
-              {form.name?.charAt(0)?.toUpperCase() || "U"}
-            </div>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                setImage(e.target.files?.[0] || null)
-              }
-            />
-
-            <div className={styles.form}>
+          <div className={styles.form}>
+            <div className={styles.inputGroup}>
+              <label>Full Name</label>
               <input
-                placeholder="Full Name"
                 value={form.name}
                 onChange={(e) =>
                   setForm({ ...form, name: e.target.value })
                 }
               />
+            </div>
 
+            <div className={styles.inputGroup}>
+              <label>Phone</label>
               <input
-                placeholder="Phone"
                 value={form.phone}
                 onChange={(e) =>
                   setForm({ ...form, phone: e.target.value })
                 }
               />
+            </div>
 
+            <div className={styles.inputGroup}>
+              <label>Email</label>
               <input
-                placeholder="Email"
                 value={form.email}
                 onChange={(e) =>
                   setForm({ ...form, email: e.target.value })
@@ -229,77 +256,42 @@ export default function ProfileModal({ open, onClose }: Props) {
             </div>
 
             <button
-              onClick={() => {
-                if (!form.name || !form.email) {
-                  alert("Please fill required fields");
-                  return;
-                }
-                setStep(2);
-              }}
-              style={{
-                background: "#ff5a00",
-                color: "#fff",
-                padding: "10px",
-                borderRadius: "8px",
-                border: "none",
-                width: "100%",
-                marginTop: "10px",
-                fontWeight: "600",
-              }}
+              className={styles.saveBtn}
+              onClick={() => setStep(2)}
             >
-              Next ➡️
+              Next →
             </button>
-          </>
+          </div>
         )}
 
         {/* STEP 2 */}
         {step === 2 && (
           <>
             <button
+              className={styles.locationBtn}
               onClick={getCurrentLocation}
-              style={{
-                background: "#ff5a00",
-                color: "#fff",
-                padding: "10px",
-                borderRadius: "8px",
-                border: "none",
-                width: "100%",
-                fontWeight: "600",
-              }}
             >
               📍 Use Current Location
             </button>
 
-            <iframe
-              width="100%"
-              height="200"
-              style={{
-                border: 0,
-                borderRadius: "10px",
-                marginTop: "10px",
-              }}
-              src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`}
-            />
+
+            <div className={styles.map}>
+              <iframe
+                src={`https://www.google.com/maps?q=${location.lat},${location.lng}&z=14&output=embed`}
+              />
+            </div>
 
             <button
+              className={styles.saveBtn}
               onClick={handleSave}
               disabled={loading}
-              style={{
-                background: "#ff5a00",
-                color: "#fff",
-                padding: "10px",
-                borderRadius: "8px",
-                border: "none",
-                width: "100%",
-                marginTop: "10px",
-                fontWeight: "600",
-              }}
             >
               {loading
-                ? "Submitting..."
+                ? "Saving..."
                 : isProfileComplete
-                ? "Update Profile"
-                : "Sign Up"}
+                  ? "Update Profile"
+                  : "Sign Up"}
+
             </button>
           </>
         )}
