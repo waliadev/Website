@@ -27,6 +27,8 @@ export default function ProfileModal({ open, onClose }: Props) {
     phone: "",
     email: "",
   });
+  const cleanEmail = profile?.email?.replace(/"/g, "").trim();
+  const isProfileComplete = !!(profile?.name && cleanEmail);
 
   const [loading, setLoading] = useState(false);
 
@@ -55,24 +57,24 @@ export default function ProfileModal({ open, onClose }: Props) {
     }
   };
 
+
+
   /* =========================
      LOCAL STORAGE SAVE
   ========================== */
-  useEffect(() => {
-    localStorage.setItem("profileForm", JSON.stringify(form));
-  }, [form]);
+
 
   /* =========================
      RESTORE ON OPEN
   ========================== */
-  useEffect(() => {
-    if (!open) return;
+  // useEffect(() => {
+  //   if (!open) return;
 
-    const savedForm = localStorage.getItem("profileForm");
-    if (savedForm) {
-      setForm(JSON.parse(savedForm));
-    }
-  }, [open]);
+  //   const savedForm = localStorage.getItem("profileForm");
+  //   if (savedForm) {
+  //     setForm(JSON.parse(savedForm));
+  //   }
+  // }, [open]);
 
   /* =========================
      INIT FROM PROFILE (ONLY ONCE)
@@ -114,6 +116,19 @@ export default function ProfileModal({ open, onClose }: Props) {
     }
   };
 
+  const handleClose = () => {
+  // Reset form to original profile
+  if (profile) {
+    setForm({
+      name: cleanValue(profile.name),
+      phone: cleanValue(profile.phone),
+      email: cleanValue(profile.email),
+    });
+  }
+
+  onClose();
+};
+
   if (!open) return null;
 
   return (
@@ -122,14 +137,14 @@ export default function ProfileModal({ open, onClose }: Props) {
         {/* HEADER */}
         <div className={styles.header}>
           <h3>
-            {form.name
-              ? `Welcome, ${form.name}`
+            {isProfileComplete
+              ? "Edit Profile"
               : "Create Your Account"}
           </h3>
 
-          <button onClick={onClose} className={styles.closeBtn}>
+          {isProfileComplete && (<button onClick={handleClose} className={styles.closeBtn}>
             ✕
-          </button>
+          </button>)}
         </div>
 
         {/* FORM */}
@@ -148,6 +163,7 @@ export default function ProfileModal({ open, onClose }: Props) {
             <label>Phone</label>
             <input
               value={form.phone}
+              disabled
               onChange={(e) =>
                 setForm({ ...form, phone: e.target.value })
               }
@@ -179,7 +195,11 @@ export default function ProfileModal({ open, onClose }: Props) {
               cursor: !isFormValid ? "not-allowed" : "pointer",
             }}
           >
-            {loading ? "Saving..." : "Save Profile"}
+            {loading
+              ? "Saving..."
+              : isProfileComplete
+                ? "Update Profile"
+                : "Sign Up"}
           </button>
         </div>
       </div>
